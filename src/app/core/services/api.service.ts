@@ -23,7 +23,7 @@ type ResourceType = 'tutores' | 'pets';
 })
 export class ApiService {
     private readonly http = inject(HttpClient);
-    private readonly BASE_URL = environment.apiUrl;
+    private readonly BASE_URL = environment.apiUrl + '/v1';
 
     // BehaviorSubjects para gerenciar estado
     private dataSubjects = new Map<ResourceType, BehaviorSubject<any[]>>([

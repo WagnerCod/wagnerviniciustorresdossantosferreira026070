@@ -10,7 +10,7 @@ import { environment } from '../../../environments/environment.prod';
 })
 export class AuthService {
     private readonly http = inject(HttpClient);
-    private readonly API_URL = environment.apiUrl;
+    private readonly API_URL = environment.apiUrl + '/autenticacao';
 
     private readonly TOKEN_KEY = 'access_token';
     private readonly REFRESH_TOKEN_KEY = 'refresh_expires_in';

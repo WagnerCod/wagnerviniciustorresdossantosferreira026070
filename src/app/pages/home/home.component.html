@@ -19,6 +19,11 @@
         <mat-icon>settings</mat-icon>
         <span>Configurações</span>
       </button>
+    
+      <button mat-menu-item (click)="login()">
+        <mat-icon>login</mat-icon>
+        <span>Entrar</span>
+      </button>
       <button mat-menu-item (click)="logout()">
         <mat-icon>logout</mat-icon>
         <span>Sair</span>
@@ -213,3 +218,5 @@
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>
+
+<app-pets></app-pets>

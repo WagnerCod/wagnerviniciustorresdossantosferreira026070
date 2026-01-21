@@ -14,7 +14,14 @@ export const routes: Routes = [
     {
         path: 'home',
         loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent),
-        canActivate: [authGuard]
+    },
+    {
+        path: 'pets',
+        loadComponent: () => import('./pages/pets/pets.component').then(m => m.Pets)
+    },
+    {
+        path: 'pets/register',
+        loadComponent: () => import('./pages/pets/register-pet/register-pet').then(m => m.RegisterPet)
     },
     {
         path: '**',

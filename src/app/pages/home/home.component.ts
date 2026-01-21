@@ -2,11 +2,12 @@ import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { AuthService } from '../../core/services/auth.service';
+import { Pets } from '../pets/pets.component';
 
 @Component({
     selector: 'app-home',
     standalone: true,
-    imports: [SharedModule],
+    imports: [SharedModule, Pets],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss'
 })
@@ -26,6 +27,10 @@ export class HomeComponent implements OnInit {
 
     toggleMenu() {
         this.isMenuOpen = !this.isMenuOpen;
+    }
+
+    login(){
+        this.router.navigate(['/login']);
     }
 
     logout() {
