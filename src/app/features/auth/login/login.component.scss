@@ -1,0 +1,21 @@
+:host {
+  display: block;
+}
+
+mat-card {
+  max-width: 100%;
+}
+
+mat-card-header {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+mat-spinner {
+  display: inline-block;
+  vertical-align: middle;
+}
