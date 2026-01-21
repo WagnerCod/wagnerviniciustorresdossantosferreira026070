@@ -3,17 +3,18 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, throwError, timer } from 'rxjs';
 import { tap, catchError, switchMap } from 'rxjs/operators';
 import { LoginRequest, LoginResponse, RefreshTokenResponse } from '../models/auth.model';
+import { environment } from '../../../environments/environment.prod';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
     private readonly http = inject(HttpClient);
-    private readonly API_URL = 'https://pet-manager-api.geia.vip/autenticacao';
+    private readonly API_URL = environment.apiUrl;
 
-    private readonly TOKEN_KEY = 'auth_token';
-    private readonly REFRESH_TOKEN_KEY = 'refresh_token';
-    private readonly TOKEN_EXPIRY_KEY = 'token_expiry';
+    private readonly TOKEN_KEY = 'access_token';
+    private readonly REFRESH_TOKEN_KEY = 'refresh_expires_in';
+    private readonly TOKEN_EXPIRY_KEY = 'expires_in';
 
     private tokenSubject = new BehaviorSubject<string | null>(this.getToken());
     private refreshTokenTimeout?: ReturnType<typeof setTimeout>;
