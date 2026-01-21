@@ -30,9 +30,7 @@ export class AuthService {
         }
     }
 
-    /**
-     * Realiza login do usuário
-     */
+
     login(credentials: LoginRequest): Observable<LoginResponse> {
         return this.http.post<LoginResponse>(`${this.API_URL}/login`, credentials)
             .pipe(
@@ -44,9 +42,6 @@ export class AuthService {
             );
     }
 
-    /**
-     * Atualiza o token de acesso usando o refresh token
-     */
     refreshToken(): Observable<RefreshTokenResponse> {
         const refreshToken = this.getRefreshToken();
 
@@ -67,30 +62,22 @@ export class AuthService {
         );
     }
 
-    /**
-     * Realiza logout do usuário
-     */
+
     logout(): void {
         this.clearAuth();
     }
 
-    /**
-     * Obtém o token atual
-     */
+
     getToken(): string | null {
         return localStorage.getItem(this.TOKEN_KEY);
     }
 
-    /**
-     * Obtém o refresh token
-     */
+
     getRefreshToken(): string | null {
         return localStorage.getItem(this.REFRESH_TOKEN_KEY);
     }
 
-    /**
-     * Verifica se o token está expirado
-     */
+
     isTokenExpired(): boolean {
         const expiry = localStorage.getItem(this.TOKEN_EXPIRY_KEY);
         if (!expiry) return true;
@@ -112,13 +99,13 @@ export class AuthService {
      * Processa a resposta de autenticação
      */
     private handleAuthResponse(response: LoginResponse | RefreshTokenResponse): void {
-        const expiryTime = Date.now() + (response.expiresIn * 1000);
+        const expiryTime = Date.now() + (response.expires_in * 1000);
 
-        localStorage.setItem(this.TOKEN_KEY, response.token);
-        localStorage.setItem(this.REFRESH_TOKEN_KEY, response.refreshToken);
+        localStorage.setItem(this.TOKEN_KEY, response.access_token);
+        localStorage.setItem(this.REFRESH_TOKEN_KEY, response.refresh_expires_in);
         localStorage.setItem(this.TOKEN_EXPIRY_KEY, expiryTime.toString());
 
-        this.tokenSubject.next(response.token);
+        this.tokenSubject.next(response.access_token);
         this.scheduleTokenRefresh();
     }
 

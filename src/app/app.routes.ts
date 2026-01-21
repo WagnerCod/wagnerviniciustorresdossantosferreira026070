@@ -9,11 +9,11 @@ export const routes: Routes = [
     },
     {
         path: 'login',
-        loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent)
+        loadComponent: () => import('./pages/auth/login/login.component').then(m => m.LoginComponent)
     },
     {
         path: 'home',
-        loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent),
+        loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent),
         canActivate: [authGuard]
     },
     {

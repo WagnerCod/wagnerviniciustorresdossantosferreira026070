@@ -32,16 +32,16 @@
             <mat-label>E-mail</mat-label>
             <input
               matInput
-              type="email"
-              formControlName="email"
-              placeholder="seu@email.com"
-              autocomplete="email"
+              type="text"
+              formControlName="username"
+              placeholder="seu@username.com"
+              autocomplete="username"
             />
-            <mat-icon matPrefix class="text-gray-400">email</mat-icon>
+            <mat-icon matPrefix class="text-gray-400">usuário</mat-icon>
             @if (
-              loginForm.get("email")?.invalid && loginForm.get("email")?.touched
+              loginForm.get("username")?.invalid && loginForm.get("username")?.touched
             ) {
-              <mat-error>{{ getErrorMessage("email") }}</mat-error>
+              <mat-error>{{ getErrorMessage("username") }}</mat-error>
             }
           </mat-form-field>
 

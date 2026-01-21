@@ -1,12 +1,12 @@
 export interface LoginRequest {
-    email: string;
+    username: string;
     password: string;
 }
 
 export interface LoginResponse {
-    token: string;
-    refreshToken: string;
-    expiresIn: number;
+    access_token: string;
+    refresh_expires_in: string;
+    expires_in: number;
     user?: {
         id: string;
         email: string;
@@ -15,7 +15,7 @@ export interface LoginResponse {
 }
 
 export interface RefreshTokenResponse {
-    token: string;
-    refreshToken: string;
-    expiresIn: number;
+    access_token: string;
+    refresh_expires_in: string;
+    expires_in: number;
 }
