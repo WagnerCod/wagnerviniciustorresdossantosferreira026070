@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
 
     ngOnInit(): void {
         // Se já estiver autenticado, redireciona para home
-        if (this.authService.isAuthenticated()) {
+        if (this.authService.checkAuth()) {
             this.router.navigate(['/home']);
             return;
         }
@@ -64,6 +64,8 @@ export class LoginComponent implements OnInit {
             next: (response) => {
                 console.log('Login realizado com sucesso', response);
                 this.loading.set(false);
+
+                // Navega imediatamente - o guard agora usa checkAuth()
                 this.router.navigate(['/home']);
             },
             error: (error) => {

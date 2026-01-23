@@ -24,6 +24,14 @@ export class AuthService {
     public token$ = this.tokenSubject.asObservable();
     public isAuthenticated = computed(() => !!this.tokenSubject.value && !this.isTokenExpired());
 
+    /**
+     * Verifica autenticação de forma síncrona
+     */
+    checkAuth(): boolean {
+        const token = this.getToken();
+        return !!token && !this.isTokenExpired();
+    }
+
     constructor() {
         // Verifica se há um token válido ao inicializar
         const token = this.getToken();
