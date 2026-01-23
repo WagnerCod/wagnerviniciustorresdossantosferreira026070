@@ -5,7 +5,8 @@ export interface LoginRequest {
 
 export interface LoginResponse {
     access_token: string;
-    refresh_expires_in: string;
+    refresh_token: string;
+    refresh_expires_in: number;
     expires_in: number;
     user?: {
         id: string;
@@ -16,6 +17,7 @@ export interface LoginResponse {
 
 export interface RefreshTokenResponse {
     access_token: string;
-    refresh_expires_in: string;
+    refresh_token: string;
+    refresh_expires_in: number;
     expires_in: number;
 }

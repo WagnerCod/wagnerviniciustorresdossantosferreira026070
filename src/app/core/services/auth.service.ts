@@ -13,8 +13,8 @@ export class AuthService {
     private readonly API_URL = environment.apiUrl + '/autenticacao';
 
     private readonly TOKEN_KEY = 'access_token';
-    private readonly REFRESH_TOKEN_KEY = 'refresh_expires_in';
-    private readonly TOKEN_EXPIRY_KEY = 'expires_in';
+    private readonly REFRESH_TOKEN_KEY = 'refresh_token';
+    private readonly TOKEN_EXPIRY_KEY = 'token_expiry';
 
     private tokenSubject = new BehaviorSubject<string | null>(this.getToken());
     private refreshTokenTimeout?: ReturnType<typeof setTimeout>;
@@ -103,7 +103,7 @@ export class AuthService {
         const expiryTime = Date.now() + (response.expires_in * 1000);
 
         localStorage.setItem(this.TOKEN_KEY, response.access_token);
-        localStorage.setItem(this.REFRESH_TOKEN_KEY, response.refresh_expires_in);
+        localStorage.setItem(this.REFRESH_TOKEN_KEY, response.refresh_token);
         localStorage.setItem(this.TOKEN_EXPIRY_KEY, expiryTime.toString());
 
         this.tokenSubject.next(response.access_token);

@@ -1,4 +1,115 @@
-<div>
-    <h1>Cadastrar Pet</h1>
-    <button (click)='navRegisterPet()'> cadastrar</button>
+<div class="max-w-7xl mx-auto p-6">
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-8 flex-wrap gap-4">
+    <div class="flex items-center gap-4">
+      <mat-icon class="text-blue-600 !text-4xl !w-9 !h-9">pets</mat-icon>
+      <h1 class="text-3xl font-medium text-gray-800 m-0">Gerenciamento de Pets</h1>
+    </div>
+    <button mat-raised-button color="primary" (click)="navRegisterPet()" class="!flex !items-center !gap-2 !h-11 !px-6">
+      <mat-icon>add</mat-icon>
+      Cadastrar Pet
+    </button>
+  </div>
+
+  <!-- Busca -->
+  <div class="mb-6">
+    <mat-form-field appearance="outline" class="!w-full !max-w-lg">
+      <mat-label>Buscar por nome</mat-label>
+      <input matInput [formControl]="searchControl" placeholder="Digite o nome do pet">
+      <mat-icon matPrefix>search</mat-icon>
+      @if (searchControl.value) {
+        <button mat-icon-button matSuffix (click)="clearSearch()" aria-label="Limpar busca">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </mat-form-field>
+  </div>
+
+  <!-- Loading -->
+  <!-- @if (loading) {
+    <div class="flex flex-col items-center justify-center py-20 gap-4">
+      <mat-spinner diameter="50"></mat-spinner>
+      <p class="text-gray-600 text-base">Carregando pets...</p>
+    </div>
+  } -->
+
+  <!-- Lista de Pets -->
+  @if (!loading && filteredPets.length > 0) {
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-6">
+      @for (pet of filteredPets; track pet.id) {
+        <mat-card class="cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl flex flex-col h-full" (click)="viewPetDetails(pet.id)">
+          <div class="relative w-full h-48 overflow-hidden bg-gray-100">
+            <img 
+              [src]="getImageUrl(pet)" 
+              [alt]="pet.nome"
+              [class]="hasPhoto(pet) ? 'w-full h-full object-cover' : 'w-full h-full object-cover opacity-30'">
+            @if (!hasPhoto(pet)) {
+              <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+                <mat-icon class="!text-gray-400 !text-6xl !w-16 !h-16">pets</mat-icon>
+              </div>
+            }
+          </div>
+          
+          <mat-card-content class="!flex-1 !p-4">
+            <h3 class="text-xl font-semibold mb-4 text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap">
+              {{ pet.nome }}
+            </h3>
+            
+            <div class="flex flex-col gap-3">
+              <div class="flex items-center gap-2 text-gray-600">
+                <mat-icon class="!text-gray-600 !text-xl !w-5 !h-5">category</mat-icon>
+                <span class="text-sm">{{ pet.raca }}</span>
+              </div>
+              
+              <div class="flex items-center gap-2 text-gray-600">
+                <mat-icon class="!text-gray-600 !text-xl !w-5 !h-5">cake</mat-icon>
+                <span class="text-sm">{{ pet.idade }} {{ pet.idade === 1 ? 'ano' : 'anos' }}</span>
+              </div>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions class="!p-4 !border-t !border-gray-200">
+            <button mat-button color="primary" class="!w-full !flex !items-center !justify-center !gap-2">
+              <mat-icon>visibility</mat-icon>
+              Ver Detalhes
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      }
+    </div>
+
+    <!-- Paginação -->
+    <mat-paginator
+      class="!bg-transparent"
+      [length]="totalElements"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      [pageSizeOptions]="[5, 10, 25, 50]"
+      (page)="onPageChange($event)"
+      showFirstLastButtons
+      aria-label="Selecione a página">
+    </mat-paginator>
+  }
+
+  <!-- Empty State -->
+  @if (!loading && filteredPets.length === 0) {
+    <div class="flex flex-col items-center justify-center py-20 text-center">
+      <mat-icon class="!text-gray-400 !text-8xl !w-20 !h-20 mb-4">pets</mat-icon>
+      @if (searchControl.value) {
+        <h2 class="text-2xl font-medium text-gray-600 m-0 mb-2">Nenhum pet encontrado</h2>
+        <p class="text-base text-gray-500 m-0 mb-6">Não encontramos pets com o nome "{{ searchControl.value }}"</p>
+        <button mat-raised-button color="primary" (click)="clearSearch()" class="!flex !items-center !gap-2">
+          <mat-icon>refresh</mat-icon>
+          Ver todos os pets
+        </button>
+      } @else {
+        <h2 class="text-2xl font-medium text-gray-600 m-0 mb-2">Nenhum pet cadastrado</h2>
+        <p class="text-base text-gray-500 m-0 mb-6">Comece cadastrando seu primeiro pet!</p>
+        <button mat-raised-button color="primary" (click)="navRegisterPet()" class="!flex !items-center !gap-2">
+          <mat-icon>add</mat-icon>
+          Cadastrar Primeiro Pet
+        </button>
+      }
+    </div>
+  }
 </div>

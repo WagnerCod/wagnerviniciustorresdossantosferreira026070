@@ -14,14 +14,23 @@ export const routes: Routes = [
     {
         path: 'home',
         loadComponent: () => import('./pages/home/home.component').then(m => m.HomeComponent),
+        canActivate: [authGuard]
     },
     {
         path: 'pets',
-        loadComponent: () => import('./pages/pets/pets.component').then(m => m.Pets)
+        loadComponent: () => import('./pages/pets/pets.component').then(m => m.Pets),
+        canActivate: [authGuard]
     },
     {
         path: 'pets/register',
-        loadComponent: () => import('./pages/pets/register-pet/register-pet').then(m => m.RegisterPet)
+        loadComponent: () => import('./pages/pets/register-pet/register-pet').then(m => m.RegisterPet),
+        canActivate: [authGuard]
+        
+    },
+    {
+        path: 'pets/:id',
+        loadComponent: () => import('./pages/pets/pet-detail/pet-detail.component').then(m => m.PetDetailComponent),
+        canActivate: [authGuard]
     },
     {
         path: '**',
