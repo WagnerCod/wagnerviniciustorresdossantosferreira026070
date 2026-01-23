@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Pets } from './pets.component';
+import { LoaderPersonalized } from './loader-personalized';
 
-describe('Pets', () => {
-  let component: Pets;
-  let fixture: ComponentFixture<Pets>;
+describe('LoaderPersonalized', () => {
+  let component: LoaderPersonalized;
+  let fixture: ComponentFixture<LoaderPersonalized>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Pets]
+      imports: [LoaderPersonalized]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(Pets);
+    fixture = TestBed.createComponent(LoaderPersonalized);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

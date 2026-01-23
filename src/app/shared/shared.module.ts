@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // Angular Material Modules
@@ -72,6 +72,7 @@ const materialModules = [
     exports: [
         CommonModule,
         ...materialModules
-    ]
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SharedModule { }

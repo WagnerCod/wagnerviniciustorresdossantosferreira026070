@@ -15,6 +15,7 @@ import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { ApiService } from '../../core/services/api.service';
 import { UtilService } from '../../core/services/util.service';
 import { PetsResponse } from '../../core/models/pets.model';
+import { LoaderPersonalized } from '../../components_utils/loader-personalized/loader-personalized';
 
 @Component({
   selector: 'app-pets',
@@ -23,6 +24,7 @@ import { PetsResponse } from '../../core/models/pets.model';
     CommonModule,
     SharedModule,
     ReactiveFormsModule,
+    // LoaderPersonalized
   ],
   templateUrl: './pets.component.html',
   styleUrl: './pets.component.scss'
@@ -87,8 +89,14 @@ export class Pets implements OnInit, OnDestroy {
         next: (response) => {
           this.pets = response.content;
           this.filteredPets = response.content;
-          this.totalElements = response.totalElements;
+          // Usar setTimeout para evitar NG0100
+          setTimeout(() => {
+            this.totalElements = response.totalElements;
+          });
           this.loading = false;
+          console.log('Pets carregados:', response);
+          console.log(this.loading)
+          console.log(this.filteredPets)
         },
         error: (error) => {
           this.loading = false;

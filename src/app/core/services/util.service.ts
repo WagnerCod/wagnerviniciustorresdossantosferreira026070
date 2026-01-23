@@ -64,6 +64,21 @@ export class UtilService {
         return cleanCPF.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
     }
 
+    maskCPF(cpf: string | number | null): string {
+        if (!cpf) return 'Não informado';
+
+        const cpfString = cpf.toString();
+        const cleanCPF = cpfString.replace(/\D/g, '');
+
+        if (cleanCPF.length !== 11) return cpfString;
+
+        // Pega os 3 primeiros e 2 últimos dígitos
+        const firstThree = cleanCPF.substring(0, 3);
+        const lastTwo = cleanCPF.substring(9, 11);
+
+        return `${firstThree}.***.***.${lastTwo}`;
+    }
+
     /**
      * Remove formatação do CPF: 123.456.789-00 -> 12345678900
      */

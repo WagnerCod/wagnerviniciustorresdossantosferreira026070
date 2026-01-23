@@ -1,5 +1,6 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Observable, BehaviorSubject, throwError, timer } from 'rxjs';
 import { tap, catchError, switchMap } from 'rxjs/operators';
 import { LoginRequest, LoginResponse, RefreshTokenResponse } from '../models/auth.model';
@@ -10,6 +11,7 @@ import { environment } from '../../../environments/environment.prod';
 })
 export class AuthService {
     private readonly http = inject(HttpClient);
+    private readonly router = inject(Router);
     private readonly API_URL = environment.apiUrl + '/autenticacao';
 
     private readonly TOKEN_KEY = 'access_token';
@@ -24,9 +26,13 @@ export class AuthService {
 
     constructor() {
         // Verifica se há um token válido ao inicializar
-        if (this.getToken() && !this.isTokenExpired()) {
+        const token = this.getToken();
+        const refreshToken = this.getRefreshToken();
+
+        if (token && refreshToken && !this.isTokenExpired()) {
             this.scheduleTokenRefresh();
-        } else if (this.isTokenExpired()) {
+        } else if (token && this.isTokenExpired()) {
+            // Apenas limpa se o token estiver expirado
             this.clearAuth();
         }
     }
@@ -122,10 +128,33 @@ export class AuthService {
         const timeToExpiry = this.getTimeToExpiry();
         const refreshTime = Math.max(0, timeToExpiry - 60000); // 1 minuto antes
 
+        // Só agenda se houver refresh token
+        if (!this.getRefreshToken()) {
+            console.warn('Refresh token não encontrado. Não será possível renovar automaticamente.');
+            return;
+        }
+
         this.refreshTokenTimeout = setTimeout(() => {
+            // Verifica novamente antes de executar
+            if (!this.getRefreshToken()) {
+                console.error('Refresh token não disponível para renovação');
+                this.clearAuth();
+                this.router.navigate(['/login'], {
+                    queryParams: { sessionExpired: 'true' }
+                });
+                return;
+            }
+
             this.refreshToken().subscribe({
                 next: () => console.log('Token renovado automaticamente'),
-                error: (error) => console.error('Falha na renovação automática:', error)
+                error: (error) => {
+                    console.error('Falha na renovação automática:', error);
+                    // Se falhar a renovação, limpar autenticação e redirecionar para login
+                    this.clearAuth();
+                    this.router.navigate(['/login'], {
+                        queryParams: { sessionExpired: 'true' }
+                    });
+                }
             });
         }, refreshTime);
     }

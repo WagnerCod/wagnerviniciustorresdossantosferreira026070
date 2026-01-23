@@ -28,3 +28,5 @@ ng e2e
 uso de Angular Material
 
 url api no eviroment https://pet-manager-api.geia.vip
+
+node > 22

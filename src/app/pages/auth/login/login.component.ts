@@ -1,8 +1,9 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { SharedModule } from '../../../shared/shared.module';
 import { AuthService } from '../../../core/services/auth.service';
+
 
 @Component({
     selector: 'app-login',
@@ -11,10 +12,11 @@ import { AuthService } from '../../../core/services/auth.service';
     templateUrl: './login.component.html',
     styleUrl: './login.component.scss'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
     private fb = inject(FormBuilder);
     private authService = inject(AuthService);
     private router = inject(Router);
+    private route = inject(ActivatedRoute);
 
     loginForm: FormGroup;
     hidePassword = signal(true);
@@ -25,6 +27,21 @@ export class LoginComponent {
         this.loginForm = this.fb.group({
             username: ['admin', [Validators.required]],
             password: ['admin', [Validators.required]]
+        });
+    }
+
+    ngOnInit(): void {
+        // Se já estiver autenticado, redireciona para home
+        if (this.authService.isAuthenticated()) {
+            this.router.navigate(['/home']);
+            return;
+        }
+
+        // Verifica se a sessão expirou
+        this.route.queryParams.subscribe(params => {
+            if (params['sessionExpired'] === 'true') {
+                this.errorMessage.set('Sua sessão expirou. Por favor, faça login novamente.');
+            }
         });
     }
 
