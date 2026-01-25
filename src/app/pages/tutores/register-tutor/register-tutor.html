@@ -1,0 +1,151 @@
+<div class="max-w-3xl mx-auto p-6">
+  <mat-card class="shadow-md">
+    <mat-card-header class="mb-6">
+      <mat-card-title class="!flex !items-center !gap-3 !text-2xl !font-medium">
+        <mat-icon>person_add</mat-icon>
+        Cadastrar Novo Tutor
+      </mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content class="!p-4">
+      <form [formGroup]="tutorForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+        
+        <!-- Upload de Foto -->
+        <div class="flex flex-col items-center gap-4 p-6 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 mb-2">
+          <div [class]="imagePreview ? 'relative w-48 h-48 rounded-full overflow-hidden bg-gray-100 border-2 border-green-500' : 'relative w-48 h-48 rounded-full overflow-hidden bg-gray-100 border-2 border-gray-300'">
+            @if (imagePreview) {
+              <img [src]="imagePreview" alt="Preview da foto do tutor" class="w-full h-full object-cover">
+              <button 
+                type="button" 
+                mat-mini-fab 
+                color="warn" 
+                class="!absolute !top-2 !right-2 !min-w-[36px] !min-h-[36px] !w-9 !h-9"
+                (click)="removeImage()"
+                aria-label="Remover foto">
+                <mat-icon class="!text-xl">close</mat-icon>
+              </button>
+            } @else {
+              <mat-icon class="!absolute !top-1/2 !left-1/2 !-translate-x-1/2 !-translate-y-1/2 !text-gray-400 !text-6xl !w-16 !h-16">person</mat-icon>
+              <p class="absolute bottom-4 left-0 right-0 text-center text-gray-600 text-sm m-0">Clique para adicionar foto</p>
+            }
+          </div>
+          
+          <input 
+            type="file" 
+            accept="image/*" 
+            #fileInput 
+            (change)="onFileSelected($event)"
+            class="hidden">
+          
+          <button 
+            type="button" 
+            mat-raised-button 
+            color="primary"
+            (click)="fileInput.click()"
+            [disabled]="loading()">
+            <mat-icon>upload</mat-icon>
+            Selecionar Foto
+          </button>
+          <p class="text-gray-600 text-xs m-0">Formatos aceitos: JPG, PNG (máx. 5MB)</p>
+        </div>
+
+        <!-- Campo Nome -->
+        <mat-form-field appearance="outline" class="!w-full">
+          <mat-label>Nome Completo</mat-label>
+          <input 
+            matInput 
+            formControlName="nome" 
+            placeholder="Ex: João da Silva"
+            [disabled]="loading()">
+          <mat-icon matPrefix class="!mr-3 !text-gray-600">person</mat-icon>
+          @if (tutorForm.get('nome')?.invalid && tutorForm.get('nome')?.touched) {
+            <mat-error>{{ getErrorMessage('nome') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Campo CPF -->
+        <mat-form-field appearance="outline" class="!w-full">
+          <mat-label>CPF</mat-label>
+          <input 
+            matInput 
+            formControlName="cpf" 
+            placeholder="000.000.000-00"
+            mask="000.000.000-00"
+            [disabled]="loading()">
+          <mat-icon matPrefix class="!mr-3 !text-gray-600">badge</mat-icon>
+          @if (tutorForm.get('cpf')?.invalid && tutorForm.get('cpf')?.touched) {
+            <mat-error>{{ getErrorMessage('cpf') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Campo Email -->
+        <mat-form-field appearance="outline" class="!w-full">
+          <mat-label>E-mail</mat-label>
+          <input 
+            matInput 
+            type="email"
+            formControlName="email" 
+            placeholder="Ex: joao.silva@email.com"
+            [disabled]="loading()">
+          <mat-icon matPrefix class="!mr-3 !text-gray-600">email</mat-icon>
+          @if (tutorForm.get('email')?.invalid && tutorForm.get('email')?.touched) {
+            <mat-error>{{ getErrorMessage('email') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Campo Telefone -->
+        <mat-form-field appearance="outline" class="!w-full">
+          <mat-label>Telefone</mat-label>
+          <input 
+            matInput 
+            formControlName="telefone" 
+            placeholder="(00) 00000-0000"
+            mask="(00) 00000-0000"
+            [disabled]="loading()">
+          <mat-icon matPrefix class="!mr-3 !text-gray-600">phone</mat-icon>
+          @if (tutorForm.get('telefone')?.invalid && tutorForm.get('telefone')?.touched) {
+            <mat-error>{{ getErrorMessage('telefone') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Campo Endereço -->
+        <mat-form-field appearance="outline" class="!w-full">
+          <mat-label>Endereço Completo</mat-label>
+          <textarea 
+            matInput 
+            formControlName="endereco" 
+            placeholder="Ex: Rua das Flores, 123, Bairro Centro, São Paulo - SP"
+            rows="3"
+            [disabled]="loading()"></textarea>
+          <mat-icon matPrefix class="!mr-3 !text-gray-600 !mt-3">location_on</mat-icon>
+          @if (tutorForm.get('endereco')?.invalid && tutorForm.get('endereco')?.touched) {
+            <mat-error>{{ getErrorMessage('endereco') }}</mat-error>
+          }
+        </mat-form-field>
+
+        <!-- Botões de Ação -->
+        <div class="flex justify-end gap-3 mt-4 pt-4 border-t border-gray-200">
+          <button 
+            type="button" 
+            mat-stroked-button 
+            (click)="onCancel()"
+            [disabled]="loading()"
+            class="!h-11 !px-6">
+            Cancelar
+          </button>
+          <button 
+            type="submit" 
+            mat-raised-button 
+            color="primary"
+            [disabled]="loading() || tutorForm.invalid"
+            class="!h-11 !px-6">
+            @if (loading()) {
+              <mat-spinner diameter="20" class="!inline-block !mr-2"></mat-spinner>
+            }
+            {{ loading() ? 'Cadastrando...' : 'Cadastrar Tutor' }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -107,5 +107,10 @@ export class LoginComponent implements OnInit {
 
         return '';
     }
+
+
+    togglePasswordVisibility() {
+        this.hidePassword.update(value => !value);
+    }
 }
 

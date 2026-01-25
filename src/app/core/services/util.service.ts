@@ -265,7 +265,7 @@ export class UtilService {
         return text.substring(0, maxLength) + '...';
     }
 
- 
+
     /**
      * Debounce para otimizar chamadas de função
      */
@@ -318,6 +318,14 @@ export class UtilService {
         return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
             navigator.userAgent
         );
+    }
+
+    /**
+     * Remove todas as máscaras/formatações de um valor (mantém apenas números)
+     */
+    removeMask(value: string): string {
+        if (!value) return '';
+        return value.replace(/\D/g, '');
     }
 
     /**

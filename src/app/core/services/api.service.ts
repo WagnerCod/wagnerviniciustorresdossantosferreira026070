@@ -174,7 +174,7 @@ export class ApiService {
         const formData = new FormData();
         formData.append('foto', file);
 
-        return this.http.post(`${this.BASE_URL}/${resource}/${resourceId}/foto`, formData)
+        return this.http.post(`${this.BASE_URL}/${resource}/${resourceId}/fotos`, formData)
             .pipe(
                 tap(() => this.clearError()),
                 catchError(error => this.handleError(error)),
