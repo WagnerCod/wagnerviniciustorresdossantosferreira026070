@@ -20,6 +20,9 @@ export class AuthService {
 
     private tokenSubject = new BehaviorSubject<string | null>(this.getToken());
     private refreshTokenTimeout?: ReturnType<typeof setTimeout>;
+    private isRefreshing = false; // Flag para evitar múltiplas renovações simultâneas
+    private failedRefreshAttempts = 0; // Contador de tentativas falhadas
+    private readonly MAX_REFRESH_ATTEMPTS = 2; // Máximo de tentativas antes de deslogar
 
     public token$ = this.tokenSubject.asObservable();
     public isAuthenticated = computed(() => !!this.tokenSubject.value && !this.isTokenExpired());
@@ -36,11 +39,15 @@ export class AuthService {
         // Verifica se há um token válido ao inicializar
         const token = this.getToken();
         const refreshToken = this.getRefreshToken();
+        const timeToExpiry = this.getTimeToExpiry();
 
-        if (token && refreshToken && !this.isTokenExpired()) {
+        // Só agenda refresh se tiver tempo suficiente (mais de 2 minutos)
+        if (token && refreshToken && !this.isTokenExpired() && timeToExpiry > 120000) {
+            console.log('Token válido encontrado. Agendando renovação automática.');
             this.scheduleTokenRefresh();
-        } else if (token && this.isTokenExpired()) {
-            // Apenas limpa se o token estiver expirado
+        } else if (token && (this.isTokenExpired() || timeToExpiry <= 120000)) {
+            // Token expirado ou prestes a expirar sem tempo de renovar
+            console.warn('Token expirado ou sem tempo para renovação. Limpando autenticação.');
             this.clearAuth();
         }
     }
@@ -49,7 +56,10 @@ export class AuthService {
     login(credentials: LoginRequest): Observable<LoginResponse> {
         return this.http.post<LoginResponse>(`${this.API_URL}/login`, credentials)
             .pipe(
-                tap(response => this.handleAuthResponse(response)),
+                tap(response => {
+                    this.failedRefreshAttempts = 0; // Reseta contador de falhas
+                    this.handleAuthResponse(response);
+                }),
                 catchError(error => {
                     console.error('Erro no login:', error);
                     return throwError(() => error);
@@ -61,17 +71,61 @@ export class AuthService {
         const refreshToken = this.getRefreshToken();
 
         if (!refreshToken) {
+            console.warn('Tentativa de renovar token sem refresh token disponível');
             this.clearAuth();
+            this.router.navigate(['/login']);
             return throwError(() => new Error('Refresh token não encontrado'));
         }
+
+        // Verifica se já excedeu o número máximo de tentativas
+        if (this.failedRefreshAttempts >= this.MAX_REFRESH_ATTEMPTS) {
+            console.error('Número máximo de tentativas de renovação excedido. Deslogando usuário.');
+            this.clearAuth();
+            this.router.navigate(['/login'], {
+                queryParams: { sessionExpired: 'true', reason: 'max_attempts' }
+            });
+            return throwError(() => new Error('Máximo de tentativas excedido'));
+        }
+
+        // Evita múltiplas requisições de refresh simultâneas
+        if (this.isRefreshing) {
+            console.log('Já existe uma renovação em andamento, aguardando...');
+            return throwError(() => new Error('Refresh já em andamento'));
+        }
+
+        this.isRefreshing = true;
+        console.log(`Tentando renovar token (tentativa ${this.failedRefreshAttempts + 1}/${this.MAX_REFRESH_ATTEMPTS})...`);
 
         return this.http.put<RefreshTokenResponse>(`${this.API_URL}/refresh`, {
             refreshToken
         }).pipe(
-            tap(response => this.handleAuthResponse(response)),
+            tap(response => {
+                console.log('Token renovado com sucesso');
+                this.failedRefreshAttempts = 0; // Reseta contador ao ter sucesso
+                this.handleAuthResponse(response);
+                this.isRefreshing = false;
+            }),
             catchError(error => {
+                this.isRefreshing = false;
+                this.failedRefreshAttempts++;
+
                 console.error('Erro ao renovar token:', error);
-                this.clearAuth();
+                console.log('Status:', error.status);
+                console.log('Mensagem:', error.error?.message || error.message);
+                console.log(`Tentativas falhadas: ${this.failedRefreshAttempts}/${this.MAX_REFRESH_ATTEMPTS}`);
+
+                // Se for 401 (não autorizado), o refresh token está inválido/expirado
+                if (error.status === 401 || this.failedRefreshAttempts >= this.MAX_REFRESH_ATTEMPTS) {
+                    console.error('Refresh token inválido ou expirado. Limpando autenticação.');
+                    this.clearAuth();
+                    this.router.navigate(['/login'], {
+                        queryParams: {
+                            sessionExpired: 'true',
+                            reason: error.status === 401 ? 'refresh_expired' : 'refresh_failed'
+                        }
+                    });
+                }
+
                 return throwError(() => error);
             })
         );
@@ -80,6 +134,7 @@ export class AuthService {
 
     logout(): void {
         this.clearAuth();
+        this.router.navigate(['/login']);
     }
 
 
@@ -136,11 +191,19 @@ export class AuthService {
         const timeToExpiry = this.getTimeToExpiry();
         const refreshTime = Math.max(0, timeToExpiry - 60000); // 1 minuto antes
 
+        // Não agenda se não houver tempo suficiente (menos de 2 minutos)
+        if (timeToExpiry < 120000) {
+            console.warn(`Tempo insuficiente para agendar renovação (${Math.floor(timeToExpiry / 1000)}s restantes)`);
+            return;
+        }
+
         // Só agenda se houver refresh token
         if (!this.getRefreshToken()) {
             console.warn('Refresh token não encontrado. Não será possível renovar automaticamente.');
             return;
         }
+
+        console.log(`Renovação automática agendada para daqui a ${Math.floor(refreshTime / 1000)}s`);
 
         this.refreshTokenTimeout = setTimeout(() => {
             // Verifica novamente antes de executar
@@ -153,15 +216,21 @@ export class AuthService {
                 return;
             }
 
+            // Verifica se não excedeu tentativas
+            if (this.failedRefreshAttempts >= this.MAX_REFRESH_ATTEMPTS) {
+                console.error('Número máximo de tentativas já foi excedido. Não tentará renovar.');
+                this.clearAuth();
+                this.router.navigate(['/login'], {
+                    queryParams: { sessionExpired: 'true' }
+                });
+                return;
+            }
+
             this.refreshToken().subscribe({
                 next: () => console.log('Token renovado automaticamente'),
                 error: (error) => {
                     console.error('Falha na renovação automática:', error);
-                    // Se falhar a renovação, limpar autenticação e redirecionar para login
-                    this.clearAuth();
-                    this.router.navigate(['/login'], {
-                        queryParams: { sessionExpired: 'true' }
-                    });
+                    // A limpeza e redirecionamento já são feitos no método refreshToken
                 }
             });
         }, refreshTime);
@@ -176,6 +245,7 @@ export class AuthService {
         localStorage.removeItem(this.TOKEN_EXPIRY_KEY);
 
         this.tokenSubject.next(null);
+        this.failedRefreshAttempts = 0; // Reseta contador
 
         if (this.refreshTokenTimeout) {
             clearTimeout(this.refreshTokenTimeout);

@@ -152,7 +152,7 @@ export class Pets implements OnInit, OnDestroy {
     if (pet.foto?.url) {
       return pet.foto.url;
     }
-    return 'https://via.placeholder.com/300x200?text=Sem+Foto';
+    return '';
   }
 
   hasPhoto(pet: PetsResponse): boolean {

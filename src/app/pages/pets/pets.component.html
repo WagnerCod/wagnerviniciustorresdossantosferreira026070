@@ -36,10 +36,13 @@
 
         <mat-card class="cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl flex flex-col h-full" (click)="viewPetDetails(pet.id)">
           <div class="relative w-full h-48 overflow-hidden bg-gray-100">
+            
+            @if(hasPhoto(pet)){
             <img 
               [src]="getImageUrl(pet)" 
               [alt]="pet.nome"
               [class]="hasPhoto(pet) ? 'w-full h-full object-cover' : 'w-full h-full object-cover opacity-30'">
+              }
             @if (!hasPhoto(pet)) {
               <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
                 <mat-icon class="!text-gray-400 !text-6xl !w-16 !h-16">pets</mat-icon>

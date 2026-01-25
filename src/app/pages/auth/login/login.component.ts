@@ -40,13 +40,24 @@ export class LoginComponent implements OnInit {
         // Verifica se a sessão expirou
         this.route.queryParams.subscribe(params => {
             if (params['sessionExpired'] === 'true') {
-                this.errorMessage.set('Sua sessão expirou. Por favor, faça login novamente.');
+                const reason = params['reason'];
+                let message = 'Sua sessão expirou. Por favor, faça login novamente.';
+
+                switch (reason) {
+                    case 'refresh_failed':
+                        message = 'Não foi possível renovar sua sessão. Por favor, faça login novamente.';
+                        break;
+                    case 'refresh_expired':
+                        message = 'Sua sessão expirou. Por favor, faça login novamente.';
+                        break;
+                    case 'max_attempts':
+                        message = 'Múltiplas tentativas de renovação falharam. Por favor, faça login novamente.';
+                        break;
+                }
+
+                this.errorMessage.set(message);
             }
         });
-    }
-
-    togglePasswordVisibility() {
-        this.hidePassword.update(value => !value);
     }
 
     onSubmit() {
@@ -97,3 +108,4 @@ export class LoginComponent implements OnInit {
         return '';
     }
 }
+
