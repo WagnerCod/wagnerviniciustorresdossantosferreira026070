@@ -1,6 +1,6 @@
 <div class="min-h-screen bg-slate-50 flex items-center justify-center py-12 px-4 sm:px-6">
   <div class="max-w-2xl w-full">
-    
+
     <div class="text-center mb-8">
       <h1 class="text-3xl font-bold text-slate-800">Novo Amigo</h1>
       <p class="text-slate-500">Preencha os dados abaixo para cadastrar</p>
@@ -11,23 +11,28 @@
 
       <mat-card-content class="!p-8 sm:!p-10">
         <form [formGroup]="petForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
-          
+
           <div class="flex justify-center mb-4">
             <div class="relative group">
-              <div [class]="imagePreview 
+              <div
+                [class]="imagePreview 
                   ? 'w-40 h-40 rounded-full shadow-lg border-4 border-teal-100 overflow-hidden relative' 
                   : 'w-40 h-40 rounded-full border-2 border-dashed border-slate-300 bg-slate-50 flex flex-col items-center justify-center cursor-pointer hover:bg-teal-50 hover:border-teal-400 transition-all duration-300 group-hover:shadow-md'">
-                
+
                 @if (imagePreview) {
-                  <img [src]="imagePreview" alt="Preview" class="w-full h-full object-cover">
-                  <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer" (click)="fileInput.click()">
-                    <mat-icon class="text-white">edit</mat-icon>
-                  </div>
+                <img [src]="imagePreview" alt="Preview" class="w-full h-full object-cover">
+                <div
+                  class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
+                  (click)="fileInput.click()">
+                  <mat-icon class="text-white">edit</mat-icon>
+                </div>
                 } @else {
-                  <div (click)="fileInput.click()" class="flex flex-col items-center p-4">
-                    <mat-icon class="!text-slate-400 group-hover:!text-teal-500 !text-4xl !w-10 !h-10 mb-2 transition-colors">add_a_photo</mat-icon>
-                    <span class="text-xs text-slate-500 font-medium text-center group-hover:text-teal-600">Adicionar Foto</span>
-                  </div>
+                <div (click)="fileInput.click()" class="flex flex-col items-center p-4">
+                  <mat-icon
+                    class="!text-slate-400 group-hover:!text-teal-500 !text-4xl !w-10 !h-10 mb-2 transition-colors">add_a_photo</mat-icon>
+                  <span class="text-xs text-slate-500 font-medium text-center group-hover:text-teal-600">Adicionar
+                    Foto</span>
+                </div>
                 }
               </div>
               <input type="file" accept="image/*" #fileInput (change)="onFileSelected($event)" class="hidden">
@@ -35,36 +40,39 @@
           </div>
 
           <div class="space-y-5">
-            
-            <div class="bg-slate-50 rounded-2xl px-4 py-2 flex items-center gap-3 border border-transparent focus-within:border-teal-400 focus-within:bg-white focus-within:ring-4 focus-within:ring-teal-500/10 transition-all duration-300">
-               <mat-icon class="!text-teal-500">badge</mat-icon>
-               <div class="h-6 w-px bg-slate-200"></div>
-               
-               <mat-form-field appearance="outline" class="!w-full !m-0 custom-input-field">
+
+            <div
+              class="bg-slate-50 rounded-2xl px-4 py-1 flex items-center gap-3 border border-transparent focus-within:border-teal-400 focus-within:bg-white focus-within:ring-4 focus-within:ring-teal-500/10 transition-all duration-300">
+              <mat-icon class="!text-teal-500">badge</mat-icon>
+              <div class="h-6 w-px bg-slate-200"></div>
+
+              <mat-form-field appearance="outline" class="!w-full !m-0 no-border">
                 <mat-label class="!text-slate-400">Nome do Pet</mat-label>
                 <input matInput formControlName="nome" [disabled]="loading" class="!text-slate-700 font-medium">
                 @if (petForm.get('nome')?.invalid && petForm.get('nome')?.touched) {
-                  <mat-error>{{ getErrorMessage('nome') }}</mat-error>
+                <mat-error>{{ getErrorMessage('nome') }}</mat-error>
                 }
               </mat-form-field>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              <div class="bg-slate-50 rounded-2xl px-4 py-2 flex items-center gap-3 border border-transparent focus-within:border-orange-400 focus-within:bg-white focus-within:ring-4 focus-within:ring-orange-500/10 transition-all duration-300">
+              <div
+                class="bg-slate-50 rounded-2xl px-4 py-1 flex items-center gap-3 border border-transparent focus-within:border-orange-400 focus-within:bg-white focus-within:ring-4 focus-within:ring-orange-500/10 transition-all duration-300">
                 <mat-icon class="!text-orange-400">category</mat-icon>
                 <div class="h-6 w-px bg-slate-200"></div>
-                
-                <mat-form-field appearance="outline" class="!w-full !m-0 custom-input-field">
+
+                <mat-form-field appearance="outline" class="!w-full !m-0 no-border">
                   <mat-label class="!text-slate-400">Raça</mat-label>
                   <input matInput formControlName="raca" [disabled]="loading" class="!text-slate-700">
                 </mat-form-field>
               </div>
 
-              <div class="bg-slate-50 rounded-2xl px-4 py-2 flex items-center gap-3 border border-transparent focus-within:border-blue-400 focus-within:bg-white focus-within:ring-4 focus-within:ring-blue-500/10 transition-all duration-300">
+              <div
+                class="bg-slate-50 rounded-2xl px-4 py-1 flex items-center gap-3 border border-transparent focus-within:border-blue-400 focus-within:bg-white focus-within:ring-4 focus-within:ring-blue-500/10 transition-all duration-300">
                 <mat-icon class="!text-blue-400">cake</mat-icon>
                 <div class="h-6 w-px bg-slate-200"></div>
-                
-                <mat-form-field appearance="outline" class="!w-full !m-0 custom-input-field">
+
+                <mat-form-field appearance="outline" class="!w-full !m-0 no-border">
                   <mat-label class="!text-slate-400">Idade</mat-label>
                   <input matInput type="number" formControlName="idade" [disabled]="loading" class="!text-slate-700">
                   <span matSuffix class="text-slate-400 text-sm font-medium">anos</span>
@@ -81,7 +89,7 @@
             <button type="submit" mat-flat-button color="primary" [disabled]="loading || petForm.invalid"
               class="!bg-teal-600 hover:!bg-teal-700 !text-white !rounded-xl !h-12 !px-8 !text-base shadow-lg w-full sm:w-auto">
               <span class="flex items-center gap-2">
-                 <mat-icon>check_circle</mat-icon> Salvar Cadastro
+                <mat-icon>check_circle</mat-icon> Salvar Cadastro
               </span>
             </button>
           </div>
