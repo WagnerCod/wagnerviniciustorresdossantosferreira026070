@@ -81,7 +81,14 @@
         <mat-card>
           <mat-card-header class="!p-5 !bg-gradient-to-br !from-purple-500 !to-purple-800 !text-white !-m-4 !mb-0">
             <div class="flex items-center gap-4 bg-white/20 rounded-full w-12 h-12 justify-center">
-              <mat-icon class="!text-white !text-3xl !w-8 !h-8">person</mat-icon>
+                @if (tutor.foto && tutor.foto.url) {
+                <img [src]="tutor.foto.url" [alt]="tutor.nome"
+                  class="w-20 h-20 rounded-full object-cover border-4 border-blue-600">
+                } @else {
+                <div class="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center border-4 border-blue-600">
+                  <mat-icon class="text-4xl w-10 h-10 text-gray-600">person</mat-icon>
+                </div>
+                }
             </div>
             <mat-card-title class="!text-white !text-2xl !mb-1">Informações do Tutor</mat-card-title>
             <mat-card-subtitle class="!text-white/90">Responsável pelo pet</mat-card-subtitle>

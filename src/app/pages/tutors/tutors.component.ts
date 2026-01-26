@@ -173,4 +173,10 @@ export class Tutors implements OnInit, OnDestroy {
                   });
           }
       }
+
+
+
+      navPetTutor(tutorId?: number): void {
+          this.router.navigate(['/tutor-details', tutorId ? tutorId : '']);
+      }
 }
