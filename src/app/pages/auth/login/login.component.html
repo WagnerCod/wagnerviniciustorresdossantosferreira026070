@@ -1,124 +1,84 @@
-<div
-  class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 py-12 px-4 sm:px-6 lg:px-8"
->
+<div class="min-h-screen bg-slate-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
   <div class="max-w-md w-full">
-    <mat-card class="shadow-2xl rounded-2xl overflow-hidden">
-      <mat-card-header
-        class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-8"
-      >
-        <div class="flex flex-col items-center w-full">
-          <mat-icon class="text-6xl mb-4">lock_person</mat-icon>
-          <mat-card-title class="text-3xl font-bold text-center"
-            >Bem-vindo</mat-card-title
-          >
-          <mat-card-subtitle class="text-indigo-100 text-center mt-2">
-            Faça login para continuar
-          </mat-card-subtitle>
-        </div>
-      </mat-card-header>
 
-      <mat-card-content class="p-8">
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+    <mat-card class="!rounded-[2.5rem] !shadow-xl !bg-white overflow-hidden border border-slate-100">
+
+      <div class="h-2 w-full bg-gradient-to-r from-teal-400 to-blue-500"></div>
+
+      <div class="pt-10 pb-6 text-center px-6">
+        <div class="bg-teal-50 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm">
+          <mat-icon class="!text-5xl !text-teal-500 !w-12 !h-12">pets</mat-icon>
+        </div>
+        <h1 class="text-3xl font-bold text-slate-800 mb-2">Bem-vindo de volta!</h1>
+        <p class="text-slate-500">Acesse para gerenciar seus amiguinhos</p>
+      </div>
+
+      <mat-card-content class="!p-8 pt-2">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-6">
+
           @if (errorMessage()) {
-            <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded">
-              <div class="flex items-center">
-                <mat-icon class="text-red-500 mr-2">error</mat-icon>
-                <p class="text-red-700 text-sm">{{ errorMessage() }}</p>
-              </div>
-            </div>
+          <div class="bg-red-50 border border-red-100 p-4 rounded-2xl flex items-start gap-3 animate-pulse">
+            <mat-icon class="text-red-500 mt-0.5">error_outline</mat-icon>
+            <p class="text-red-700 text-sm font-medium pt-0.5">{{ errorMessage() }}</p>
+          </div>
           }
 
-          <mat-form-field appearance="outline" class="w-full">
-            <mat-label>E-mail</mat-label>
-            <input
-              matInput
-              type="text"
-              formControlName="username"
-              placeholder="seu@username.com"
-              autocomplete="username"
-            />
-            <mat-icon matPrefix class="text-gray-400">usuário</mat-icon>
-            @if (
-              loginForm.get("username")?.invalid && loginForm.get("username")?.touched
-            ) {
-              <mat-error>{{ getErrorMessage("username") }}</mat-error>
-            }
-          </mat-form-field>
+          <div class="space-y-5">
+            <div
+              class="bg-slate-50 rounded-2xl px-4 py-1 flex items-center gap-3 border border-transparent focus-within:border-teal-400 focus-within:bg-white focus-within:ring-4 focus-within:ring-teal-500/10 transition-all duration-300">
+              <mat-icon class="!text-teal-500">alternate_email</mat-icon>
+              <div class="h-6 w-px bg-slate-200"></div>
 
-          <mat-form-field appearance="outline" class="w-full">
-            <mat-label>Senha</mat-label>
-            <input
-              matInput
-              [type]="hidePassword() ? 'password' : 'text'"
-              formControlName="password"
-              placeholder="••••••••"
-              autocomplete="current-password"
-            />
-            <mat-icon matPrefix class="text-gray-400">lock</mat-icon>
-            <button
-              mat-icon-button
-              matSuffix
-              type="button"
-              (click)="togglePasswordVisibility()"
-              [attr.aria-label]="'Ocultar senha'"
-              [attr.aria-pressed]="hidePassword()"
-            >
-              <mat-icon>{{
-                hidePassword() ? "visibility_off" : "visibility"
-              }}</mat-icon>
-            </button>
-            @if (
-              loginForm.get("password")?.invalid &&
-              loginForm.get("password")?.touched
-            ) {
-              <mat-error>{{ getErrorMessage("password") }}</mat-error>
-            }
-          </mat-form-field>
+              <mat-form-field appearance="outline" class="!w-full !m-0 no-border">
+                <mat-label class="!text-slate-400">Usuário ou E-mail</mat-label>
+                <input matInput type="text" formControlName="username" autocomplete="username"
+                  class="!text-slate-700 font-medium">
+                @if (loginForm.get("username")?.invalid && loginForm.get("username")?.touched) {
+                <mat-error>{{ getErrorMessage("username") }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
 
-          <div class="flex items-center justify-between">
-            <mat-checkbox class="text-sm">Lembrar-me</mat-checkbox>
-            <a
-              href="#"
-              class="text-sm font-medium text-indigo-600 hover:text-indigo-500"
-            >
-              Esqueceu a senha?
-            </a>
+            <div
+              class="bg-slate-50 rounded-2xl px-4 py-1 flex items-center gap-3 border border-transparent focus-within:border-teal-400 focus-within:bg-white focus-within:ring-4 focus-within:ring-teal-500/10 transition-all duration-300">
+              <mat-icon class="!text-teal-500">lock_outline</mat-icon>
+              <div class="h-6 w-px bg-slate-200"></div>
+
+              <mat-form-field appearance="outline" class="!w-full !m-0 no-border">
+                <mat-label class="!text-slate-400">Senha</mat-label>
+                <input matInput [type]="hidePassword() ? 'password' : 'text'" formControlName="password"
+                  autocomplete="current-password" class="!text-slate-700 font-medium">
+
+                <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility()"
+                  class="!text-slate-400 hover:!text-teal-600">
+                  <mat-icon>{{ hidePassword() ? "visibility_off" : "visibility" }}</mat-icon>
+                </button>
+
+                @if (loginForm.get("password")?.invalid && loginForm.get("password")?.touched) {
+                <mat-error>{{ getErrorMessage("password") }}</mat-error>
+                }
+              </mat-form-field>
+            </div>
           </div>
 
-          <button
-            mat-raised-button
-            color="primary"
-            type="submit"
-            class="w-full h-12 text-lg font-semibold"
-            [disabled]="loading()"
-          >
-            @if (loading()) {
-              <mat-spinner
-                diameter="24"
-                class="inline-block mr-2"
-              ></mat-spinner>
-              <span>Entrando...</span>
-            } @else {
-              <span>Entrar</span>
-            }
-          </button>
+          <div class="mt-4">
+            <button mat-flat-button color="primary" type="submit"
+              class="!w-full !h-14 !text-lg !font-bold !rounded-2xl !bg-teal-600 hover:!bg-teal-700 !text-white shadow-lg hover:shadow-teal-500/30 transition-all duration-300"
+              [disabled]="loading()">
+              @if (loading()) {
+              <div class="flex items-center justify-center gap-3">
+                <mat-spinner diameter="24" color="accent"></mat-spinner>
+                <span>Entrando...</span>
+              </div>
+              } @else {
+              <span>Acessar Sistema</span>
+              }
+            </button>
+          </div>
+
+
         </form>
       </mat-card-content>
-
-      <mat-card-footer class="bg-gray-50 p-6 text-center border-t">
-        <p class="text-sm text-gray-600">
-          Não tem uma conta?
-          <a
-            href="#"
-            class="font-medium text-indigo-600 hover:text-indigo-500 ml-1"
-          >
-            Cadastre-se
-          </a>
-        </p>
-      </mat-card-footer>
     </mat-card>
   </div>
 </div>
-
-
-<!-- <app-loader-personalized [isLoading]="loading()"></app-loader-personalized> -->

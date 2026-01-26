@@ -19,10 +19,6 @@ export class HomeComponent implements OnInit {
     isMenuOpen = false;
 
     ngOnInit() {
-        // Verifica se está autenticado
-        if (!this.authService.isAuthenticated()) {
-            this.router.navigate(['/login']);
-        }
     }
 
     toggleMenu() {
