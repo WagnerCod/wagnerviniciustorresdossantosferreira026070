@@ -47,6 +47,11 @@ export const routes: Routes = [
         canActivate: [authGuard]
     },
     {
+        path: 'tutors/update/:id',
+        loadComponent: () => import('./pages/tutors/update-tutors/update-tutors').then(m => m.UpdateTutors),
+        canActivate: [authGuard]
+    },
+    {
         path: 'tutors/:id',
         loadComponent: () => import('./pages/tutors/tutors.component').then(m => m.Tutors),
         canActivate: [authGuard]

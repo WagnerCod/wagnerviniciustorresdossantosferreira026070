@@ -35,6 +35,9 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-6">
         @for (tutor of tutores; track tutor.id) {
           <mat-card class="cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl flex flex-col h-full" (click)="viewTutorDetails(tutor.id)">
+            <div>
+              <button (click)="deleteTutors(tutor)">excluir</button>
+            </div>
             <div class="relative w-full h-48 overflow-hidden bg-gradient-to-br from-purple-100 to-purple-200 flex items-center justify-center">
               @if (hasPhoto(tutor)) {
                 <img 
@@ -58,18 +61,28 @@
                   <mat-icon class="!text-purple-600 !text-xl !w-5 !h-5">email</mat-icon>
                   <span class="text-sm truncate">{{ tutor.email }}</span>
                 </div>
+
+                <div class="flex items-center gap-2 text-gray-600">
+                  <mat-icon class="!text-purple-600 !text-xl !w-5 !h-5">email</mat-icon>
+                  <span class="text-sm truncate">{{ util.maskCPF(tutor.cpf) }}</span>
+                </div>
                 
                 <div class="flex items-center gap-2 text-gray-600">
                   <mat-icon class="!text-purple-600 !text-xl !w-5 !h-5">phone</mat-icon>
                   <span class="text-sm">{{ formatPhone(tutor.telefone) }}</span>
                 </div>
+
+                <div class="flex items-center gap-2 text-gray-600">
+                  <mat-icon class="!text-purple-600 !text-xl !w-5 !h-5">maps</mat-icon>
+                  <span class="text-sm">{{ tutor.endereco }}</span>
+                </div>
               </div>
             </mat-card-content>
 
             <mat-card-actions class="!p-4 !border-t !border-gray-200">
-              <button mat-button color="primary" class="!w-full !flex !items-center !justify-center !gap-2">
-                <mat-icon>visibility</mat-icon>
-                Ver Detalhes
+              <button mat-button color="primary" class="!w-full !flex !items-center !justify-center !gap-2" (click)="navUpdateTutor(tutor.id); $event.stopPropagation()">
+                <mat-icon>edit</mat-icon>
+                Editar
               </button>
             </mat-card-actions>
           </mat-card>

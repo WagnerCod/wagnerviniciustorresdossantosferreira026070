@@ -185,7 +185,7 @@ export class ApiService {
     /**
      * Deleta foto genérico
      */
-    private deletePhoto(resource: ResourceType, resourceId: number, fotoId: string): Observable<void> {
+    private deletePhoto(resource: ResourceType, resourceId: number, fotoId: number): Observable<void> {
         this.setLoading(true);
         return this.http.delete<void>(`${this.BASE_URL}/${resource}/${resourceId}/foto/${fotoId}`)
             .pipe(
@@ -252,7 +252,7 @@ export class ApiService {
         return this.uploadPhoto('tutores', tutorId, file);
     }
 
-    deleteTutorPhoto(tutorId: number, fotoId: string) {
+    deleteTutorPhoto(tutorId: number, fotoId: number) {
         return this.deletePhoto('tutores', tutorId, fotoId);
     }
 
@@ -305,7 +305,7 @@ export class ApiService {
         return this.uploadPhoto('pets', petId, file);
     }
 
-    deletePetPhoto(petId: number, fotoId: string) {
+    deletePetPhoto(petId: number, fotoId: number) {
         return this.deletePhoto('pets', petId, fotoId);
     }
 

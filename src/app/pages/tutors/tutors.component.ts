@@ -19,7 +19,7 @@ import { SharedModule } from '../../shared/shared.module';
 })
 export class Tutors implements OnInit, OnDestroy {
   private apiService = inject(ApiService);
-  private utilService = inject(UtilService);
+  public util = inject(UtilService);
   private router = inject(Router);
   private destroy$ = new Subject<void>();
 
@@ -98,7 +98,7 @@ export class Tutors implements OnInit, OnDestroy {
           this.loading.set(false);
           this.loadingMore.set(false);
           this.isLoadingPage = false;
-          this.utilService.showError('Erro ao carregar tutores: ' + error.message);
+          this.util.showError('Erro ao carregar tutores: ' + error.message);
         }
       });
   }
@@ -121,6 +121,10 @@ export class Tutors implements OnInit, OnDestroy {
     this.router.navigate(['/tutors/register']);
   }
 
+  navUpdateTutor(id: number): void {
+    this.router.navigate(['/tutors/update', id]);
+  }
+
   viewTutorDetails(id: number): void {
     this.router.navigate(['/tutors', id]);
   }
@@ -138,6 +142,35 @@ export class Tutors implements OnInit, OnDestroy {
 
   formatPhone(phone: string | number): string {
     if (!phone) return 'Não informado';
-    return this.utilService.formatPhone(phone.toString());
+    return this.util.formatPhone(phone.toString());
   }
+
+
+      deleteTutors(tutors: TutoresResponse): void {
+          if (confirm(`Tem certeza que deseja excluir ${tutors.nome}?`)) {
+            this.apiService.deleteTutor(tutors.id)
+                  .pipe(takeUntil(this.destroy$))
+                  .subscribe({
+                      next: () => {
+                          this.util.showSuccess('Tutor excluído com sucesso!');
+                          if(tutors.foto && tutors.foto.id){
+                            this.apiService.deleteTutorPhoto(tutors.id, tutors.foto.id)
+                              .pipe(takeUntil(this.destroy$))
+                              .subscribe({
+                                  next: () => {
+                                      this.util.showSuccess('Foto do tutor excluída com sucesso!');
+                                  },
+                                  error: (error) => {
+                                      this.util.showError('Erro ao excluir foto do tutor: ' + error.message);
+                                  }
+                              });
+                          }
+                          this.resetAndLoad();
+                      },
+                      error: (error) => {
+                          this.util.showError('Erro ao excluir pet: ' + error.message);
+                      }
+                  });
+          }
+      }
 }
