@@ -21,4 +21,16 @@ export interface TutoresResponse {
     endereco: string;
     cpf: number;
     foto?: TutoresPhoto;
+    pets?: Array<{
+        id: number;
+        nome: string;
+        raca: string;
+        idade: number;
+        foto?: {
+            id: number;
+            nome: string;
+            contentType: string;
+            url: string;
+        };
+    }>;
 }

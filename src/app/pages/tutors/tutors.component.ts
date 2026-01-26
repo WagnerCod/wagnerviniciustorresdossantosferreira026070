@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, OnDestroy, signal, ElementRef, ViewChild } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, takeUntil, forkJoin } from 'rxjs';
 import { ApiService } from '../../core/services/api.service';
 import { UtilService } from '../../core/services/util.service';
 import { TutoresResponse } from '../../core/models/tutores.model';
@@ -88,11 +88,37 @@ export class Tutors implements OnInit, OnDestroy {
             this.hasReachedEnd.set(true);
           }
 
-          this.tutores = [...this.tutores, ...newTutores];
-          this.currentPage++;
-          this.loading.set(false);
-          this.loadingMore.set(false);
-          this.isLoadingPage = false;
+          // Buscar detalhes completos de cada tutor (incluindo pets)
+          if (newTutores.length > 0) {
+            const tutorDetailRequests = newTutores.map(tutor =>
+              this.apiService.getTutorById(tutor.id)
+            );
+
+            forkJoin(tutorDetailRequests)
+              .pipe(takeUntil(this.destroy$))
+              .subscribe({
+                next: (tutoresComPets) => {
+                  this.tutores = [...this.tutores, ...tutoresComPets];
+                  this.currentPage++;
+                  this.loading.set(false);
+                  this.loadingMore.set(false);
+                  this.isLoadingPage = false;
+                },
+                error: (error) => {
+                  console.error('Erro ao carregar detalhes dos tutores:', error);
+                  // Em caso de erro, adiciona os tutores sem os pets
+                  this.tutores = [...this.tutores, ...newTutores];
+                  this.currentPage++;
+                  this.loading.set(false);
+                  this.loadingMore.set(false);
+                  this.isLoadingPage = false;
+                }
+              });
+          } else {
+            this.loading.set(false);
+            this.loadingMore.set(false);
+            this.isLoadingPage = false;
+          }
         },
         error: (error) => {
           this.loading.set(false);
@@ -146,37 +172,37 @@ export class Tutors implements OnInit, OnDestroy {
   }
 
 
-      deleteTutors(tutors: TutoresResponse): void {
-          if (confirm(`Tem certeza que deseja excluir ${tutors.nome}?`)) {
-            this.apiService.deleteTutor(tutors.id)
-                  .pipe(takeUntil(this.destroy$))
-                  .subscribe({
-                      next: () => {
-                          this.util.showSuccess('Tutor excluído com sucesso!');
-                          if(tutors.foto && tutors.foto.id){
-                            this.apiService.deleteTutorPhoto(tutors.id, tutors.foto.id)
-                              .pipe(takeUntil(this.destroy$))
-                              .subscribe({
-                                  next: () => {
-                                      this.util.showSuccess('Foto do tutor excluída com sucesso!');
-                                  },
-                                  error: (error) => {
-                                      this.util.showError('Erro ao excluir foto do tutor: ' + error.message);
-                                  }
-                              });
-                          }
-                          this.resetAndLoad();
-                      },
-                      error: (error) => {
-                          this.util.showError('Erro ao excluir pet: ' + error.message);
-                      }
-                  });
+  deleteTutors(tutors: TutoresResponse): void {
+    if (confirm(`Tem certeza que deseja excluir ${tutors.nome}?`)) {
+      this.apiService.deleteTutor(tutors.id)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            this.util.showSuccess('Tutor excluído com sucesso!');
+            if (tutors.foto && tutors.foto.id) {
+              this.apiService.deleteTutorPhoto(tutors.id, tutors.foto.id)
+                .pipe(takeUntil(this.destroy$))
+                .subscribe({
+                  next: () => {
+                    this.util.showSuccess('Foto do tutor excluída com sucesso!');
+                  },
+                  error: (error) => {
+                    this.util.showError('Erro ao excluir foto do tutor: ' + error.message);
+                  }
+                });
+            }
+            this.resetAndLoad();
+          },
+          error: (error) => {
+            this.util.showError('Erro ao excluir pet: ' + error.message);
           }
-      }
+        });
+    }
+  }
 
 
 
-      navPetTutor(tutorId?: number): void {
-          this.router.navigate(['/tutor-details', tutorId ? tutorId : '']);
-      }
+  navPetTutor(tutorId?: number): void {
+    this.router.navigate(['/tutor-details', tutorId ? tutorId : '']);
+  }
 }
