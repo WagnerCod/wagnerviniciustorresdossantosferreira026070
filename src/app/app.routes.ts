@@ -37,6 +37,21 @@ export const routes: Routes = [
         canActivate: [authGuard]
     },
     {
+        path: 'tutors',
+        loadComponent: () => import('./pages/tutors/tutors.component').then(m => m.Tutors),
+        canActivate: [authGuard]
+    },
+    {
+        path: 'tutors/register',
+        loadComponent: () => import('./pages/tutors/register-tutor/register-tutor').then(m => m.RegisterTutor),
+        canActivate: [authGuard]
+    },
+    {
+        path: 'tutors/:id',
+        loadComponent: () => import('./pages/tutors/tutors.component').then(m => m.Tutors),
+        canActivate: [authGuard]
+    },
+    {
         path: '**',
         redirectTo: '/home'
     }

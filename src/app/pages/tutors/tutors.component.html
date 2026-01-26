@@ -1,0 +1,124 @@
+<div class="max-w-7xl mx-auto p-6">
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-8 flex-wrap gap-4">
+    <div class="flex items-center gap-4">
+      <mat-icon class="text-purple-600 !text-4xl !w-9 !h-9">people</mat-icon>
+      <h1 class="text-3xl font-medium text-gray-800 m-0">Gerenciamento de Tutores</h1>
+    </div>
+    <button mat-raised-button color="primary" (click)="navRegisterTutor()" class="!flex !items-center !gap-2 !h-11 !px-6">
+      <mat-icon>person_add</mat-icon>
+      Cadastrar Tutor
+    </button>
+  </div>
+
+  <!-- Busca -->
+  <div class="mb-6">
+    <mat-form-field appearance="outline" class="!w-full !max-w-lg">
+      <mat-label>Buscar por nome</mat-label>
+      <input matInput [formControl]="searchControl" placeholder="Digite o nome do tutor">
+      <mat-icon matPrefix>search</mat-icon>
+      @if (searchControl.value) {
+        <button mat-icon-button matSuffix (click)="clearSearch()" aria-label="Limpar busca">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </mat-form-field>
+  </div>
+
+  <!-- Lista de Tutores com Scroll Infinito -->
+  <div 
+    class="max-h-[calc(100vh-300px)] overflow-y-auto pr-2"
+    (scroll)="onScroll($event)"
+    #scrollContainer>
+    
+    @if (tutores.length > 0) {
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-6">
+        @for (tutor of tutores; track tutor.id) {
+          <mat-card class="cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl flex flex-col h-full" (click)="viewTutorDetails(tutor.id)">
+            <div class="relative w-full h-48 overflow-hidden bg-gradient-to-br from-purple-100 to-purple-200 flex items-center justify-center">
+              @if (hasPhoto(tutor)) {
+                <img 
+                  [src]="getImageUrl(tutor)" 
+                  [alt]="tutor.nome"
+                  class="w-40 h-40 rounded-full object-cover border-4 border-white shadow-lg">
+              } @else {
+                <div class="w-40 h-40 rounded-full bg-white flex items-center justify-center border-4 border-purple-300 shadow-lg">
+                  <mat-icon class="!text-purple-400 !text-8xl !w-20 !h-20">person</mat-icon>
+                </div>
+              }
+            </div>
+            
+            <mat-card-content class="!flex-1 !p-4">
+              <h3 class="text-xl font-semibold mb-4 text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap">
+                {{ tutor.nome }}
+              </h3>
+              
+              <div class="flex flex-col gap-3">
+                <div class="flex items-center gap-2 text-gray-600">
+                  <mat-icon class="!text-purple-600 !text-xl !w-5 !h-5">email</mat-icon>
+                  <span class="text-sm truncate">{{ tutor.email }}</span>
+                </div>
+                
+                <div class="flex items-center gap-2 text-gray-600">
+                  <mat-icon class="!text-purple-600 !text-xl !w-5 !h-5">phone</mat-icon>
+                  <span class="text-sm">{{ formatPhone(tutor.telefone) }}</span>
+                </div>
+              </div>
+            </mat-card-content>
+
+            <mat-card-actions class="!p-4 !border-t !border-gray-200">
+              <button mat-button color="primary" class="!w-full !flex !items-center !justify-center !gap-2">
+                <mat-icon>visibility</mat-icon>
+                Ver Detalhes
+              </button>
+            </mat-card-actions>
+          </mat-card>
+        }
+      </div>
+
+      <!-- Loading mais itens -->
+      @if (loadingMore()) {
+        <div class="flex justify-center py-6">
+          <mat-spinner diameter="40"></mat-spinner>
+        </div>
+      }
+
+      <!-- Mensagem de fim -->
+      @if (hasReachedEnd() && !loadingMore()) {
+        <div class="text-center py-6 text-gray-500">
+          <mat-icon class="!text-4xl !w-10 !h-10 mb-2">check_circle</mat-icon>
+          <p class="m-0">Todos os tutores foram carregados</p>
+        </div>
+      }
+    }
+  </div>
+
+  <!-- Loading inicial -->
+  @if (loading() && tutores.length === 0) {
+    <div class="flex justify-center items-center py-20">
+      <mat-spinner></mat-spinner>
+    </div>
+  }
+
+  <!-- Empty State -->
+  @if (!loading() && tutores.length === 0) {
+    <div class="flex flex-col items-center justify-center py-20 text-center">
+      <mat-icon class="!text-gray-400 !text-8xl !w-20 !h-20 mb-4">people_outline</mat-icon>
+      @if (searchControl.value) {
+        <h2 class="text-2xl font-medium text-gray-600 m-0 mb-2">Nenhum tutor encontrado</h2>
+        <p class="text-base text-gray-500 m-0 mb-6">Não encontramos tutores com o nome "{{ searchControl.value }}"</p>
+        <button mat-raised-button color="primary" (click)="clearSearch()" class="!flex !items-center !gap-2">
+          <mat-icon>refresh</mat-icon>
+          Ver todos os tutores
+        </button>
+      } @else {
+        <h2 class="text-2xl font-medium text-gray-600 m-0 mb-2">Nenhum tutor cadastrado</h2>
+        <p class="text-base text-gray-500 m-0 mb-6">Comece cadastrando seu primeiro tutor!</p>
+        <button mat-raised-button color="primary" (click)="navRegisterTutor()" class="!flex !items-center !gap-2">
+          <mat-icon>person_add</mat-icon>
+          Cadastrar Primeiro Tutor
+        </button>
+      }
+    </div>
+  }
+</div>

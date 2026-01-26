@@ -148,6 +148,10 @@ export class Pets implements OnInit, OnDestroy {
     this.router.navigate(['/pets/register']);
   }
 
+  navTutors(): void {
+    this.router.navigate(['/tutors']);
+  }
+
   getImageUrl(pet: PetsResponse): string {
     if (pet.foto?.url) {
       return pet.foto.url;

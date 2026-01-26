@@ -7,8 +7,10 @@ export interface Tutores {
 }
 
 export interface TutoresPhoto {
-    id: string;
-    foto: string;
+    id: number;
+    nome: string;
+    contentType: string;
+    url: string;
 }
 
 export interface TutoresResponse {
@@ -17,13 +19,6 @@ export interface TutoresResponse {
     email: string;
     telefone: string;
     endereco: string;
-    cpf: string;
-    foto: Array<{
-        id: string;
-        foto: string;
-        contentType: string;
-        url: string;
-    }>;
-    page: number;
-    size: number;
+    cpf: number;
+    foto?: TutoresPhoto;
 }

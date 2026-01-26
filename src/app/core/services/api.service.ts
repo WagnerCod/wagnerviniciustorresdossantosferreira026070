@@ -217,9 +217,22 @@ export class ApiService {
         return this.delete('tutores', id);
     }
 
-    searchTutoresByName(nome: string) {
-        const params = new HttpParams().set('nome', nome);
-        return this.search<TutoresResponse>('tutores', 'search', params);
+    searchTutoresByName(nome: string = '', page: number = 0, size: number = 10) {
+        const params = new HttpParams()
+            .set('nome', nome)
+            .set('page', page.toString())
+            .set('size', size.toString());
+
+        this.setLoading(true);
+        return this.http.get<PaginatedResponse<TutoresResponse>>(`${this.BASE_URL}/tutores`, { params })
+            .pipe(
+                tap(response => {
+                    this.getDataSubject('tutores').next(response.content);
+                    this.clearError();
+                }),
+                catchError(error => this.handleError(error)),
+                finalize(() => this.setLoading(false))
+            );
     }
 
     getTutorByCPF(cpf: string) {
