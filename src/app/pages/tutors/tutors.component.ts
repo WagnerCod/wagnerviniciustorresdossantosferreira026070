@@ -201,6 +201,21 @@ export class Tutors implements OnInit, OnDestroy {
   }
 
 
+  deletePetTutor(tutorId: number, petId: number): void {
+    if (confirm(`Tem certeza que deseja desvincular este pet do tutor?`)) {
+      this.apiService.unlinkPetFromTutor(tutorId, petId)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            this.util.showSuccess('Pet desvinculado do tutor com sucesso!');
+            this.resetAndLoad();
+          },
+          error: (error) => {
+            this.util.showError('Erro ao desvincular pet do tutor: ' + error.message);
+          }
+        });
+    }
+  }
 
   navPetTutor(tutorId?: number): void {
     this.router.navigate(['/tutor-details', tutorId ? tutorId : '']);

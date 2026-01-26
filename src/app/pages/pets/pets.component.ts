@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedModule } from '../../shared/shared.module';
 import { Router } from '@angular/router';
@@ -37,8 +37,10 @@ export class Pets implements OnInit, OnDestroy {
 
   pets: PetsResponse[] = [];
   filteredPets: PetsResponse[] = [];
-  loading = false;
+  loading = signal(false);
+  loadingMore = signal(false);
   private isSearchMode = false;
+  hasMorePages = signal(true);
 
   // Paginação
   totalElements = 0;
@@ -67,6 +69,8 @@ export class Pets implements OnInit, OnDestroy {
       )
       .subscribe(searchTerm => {
         this.pageIndex = 0;
+        this.filteredPets = [];
+        this.hasMorePages.set(true);
 
         if (searchTerm && searchTerm.trim()) {
           this.isSearchMode = true;
@@ -78,65 +82,83 @@ export class Pets implements OnInit, OnDestroy {
       });
   }
 
-  loadPets(): void {
-    if (this.loading || this.isSearchMode) return;
+  loadPets(append: boolean = false): void {
+    if ((this.loading() || this.loadingMore()) || this.isSearchMode || !this.hasMorePages()) return;
 
-    this.loading = true;
+    if (append) {
+      this.loadingMore.set(true);
+    } else {
+      this.loading.set(true);
+      this.filteredPets = [];
+      this.pageIndex = 0;
+    }
 
     this.apiService.getPets(this.pageIndex, this.pageSize)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          this.pets = response.content;
-          this.filteredPets = response.content;
-          // Usar setTimeout para evitar NG0100
-          setTimeout(() => {
-            this.totalElements = response.totalElements;
-          });
-          this.loading = false;
-          console.log('Pets carregados:', response);
-          console.log(this.loading)
-          console.log(this.filteredPets)
+          const newPets = response.content;
+
+          if (append) {
+            this.filteredPets = [...this.filteredPets, ...newPets];
+          } else {
+            this.filteredPets = newPets;
+          }
+
+          this.totalElements = response.total;
+          this.hasMorePages.set(this.filteredPets.length < this.totalElements);
+
+          this.loading.set(false);
+          this.loadingMore.set(false);
         },
         error: (error) => {
-          this.loading = false;
+          this.loading.set(false);
+          this.loadingMore.set(false);
           this.utilService.showError('Erro ao carregar pets: ' + error.message);
         }
       });
   }
 
   searchPets(nome: string): void {
-    if (this.loading) return;
+    if (this.loading()) return;
 
-    this.loading = true;
+    this.loading.set(true);
 
     this.apiService.searchPetsByName(nome)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (pets) => {
-          this.filteredPets = pets;
-          this.totalElements = pets.length;
-          this.loading = false;
+        next: (response: any) => {
+          console.log('Pets encontrados na busca:', response);
+
+          this.filteredPets = response.content;
+          this.totalElements = response.total;
+          this.loading.set(false);
         },
         error: (error) => {
-          this.loading = false;
+          this.loading.set(false);
           this.utilService.showError('Erro ao buscar pets: ' + error.message);
         }
       });
   }
 
-  onPageChange(event: PageEvent): void {
-    if (this.loading || this.isSearchMode) return;
+  onScroll(event: any): void {
+    const element = event.target;
+    const threshold = 100;
+    const position = element.scrollTop + element.clientHeight;
+    const height = element.scrollHeight;
 
-    this.pageIndex = event.pageIndex;
-    this.pageSize = event.pageSize;
-    this.loadPets();
+    if (position > height - threshold && !this.loadingMore() && this.hasMorePages() && !this.isSearchMode) {
+      this.pageIndex++;
+      this.loadPets(true);
+    }
   }
 
   clearSearch(): void {
     this.isSearchMode = false;
     this.searchControl.setValue('', { emitEvent: false });
     this.pageIndex = 0;
+    this.filteredPets = [];
+    this.hasMorePages.set(true);
     this.loadPets();
   }
 

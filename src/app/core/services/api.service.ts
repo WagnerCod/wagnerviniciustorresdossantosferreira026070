@@ -12,7 +12,7 @@ export interface PaginatedResponse<T> {
     content: T[];
     page: number;
     size: number;
-    totalElements: number;
+    total: number;
     totalPages: number;
 }
 
@@ -280,12 +280,12 @@ export class ApiService {
 
     searchPetsByName(nome: string) {
         const params = new HttpParams().set('nome', nome);
-        return this.search<PetsResponse>('pets', 'search', params);
+        return this.search<PetsResponse>('pets', '', params);
     }
 
     getPetsByEspecie(especie: string) {
-        const params = new HttpParams().set('especie', especie);
-        return this.search<PetsResponse>('pets', 'especie', params);
+        const params = new HttpParams().set('raca', especie);
+        return this.search<PetsResponse>('pets', '', params);
     }
 
     getPetsByTutor(tutorId: number) {

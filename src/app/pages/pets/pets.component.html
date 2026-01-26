@@ -33,8 +33,9 @@
   <!-- <app-loader-personalized [isLoading]="loading"></app-loader-personalized> -->
 
   <!-- Lista de Pets -->
-  @if (!loading && filteredPets.length > 0) {
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-6">
+  <div class="max-h-[calc(100vh-300px)] overflow-y-auto" (scroll)="onScroll($event)">
+    @if (!loading() && filteredPets.length > 0) {
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-6">
       @for (pet of filteredPets; track pet.id) {
 
 
@@ -80,23 +81,24 @@
           </mat-card-actions>
         </mat-card>
       }
-    </div>
+      </div>
 
-    <!-- Paginação -->
-    <mat-paginator
-      class="!bg-transparent"
-      [length]="totalElements"
-      [pageSize]="pageSize"
-      [pageIndex]="pageIndex"
-      [pageSizeOptions]="[5, 10, 25, 50]"
-      (page)="onPageChange($event)"
-      showFirstLastButtons
-      aria-label="Selecione a página">
-    </mat-paginator>
-  }
+      <!-- Loading More Indicator -->
+      @if (loadingMore()) {
+        <div class="flex justify-center py-6">
+          <mat-spinner diameter="40"></mat-spinner>
+        </div>
+      }
+
+      @if (!hasMorePages() && filteredPets.length > 0) {
+        <div class="text-center py-6 text-gray-500">
+          <p>Você visualizou todos os pets ({{ filteredPets.length }} de {{ totalElements }})</p>
+        </div>
+      }
+    }
 
   <!-- Empty State -->
-  @if (!loading && filteredPets.length === 0) {
+  @if (!loading() && filteredPets.length === 0) {
     <div class="flex flex-col items-center justify-center py-20 text-center">
       <mat-icon class="!text-gray-400 !text-8xl !w-20 !h-20 mb-4">pets</mat-icon>
       @if (searchControl.value) {
@@ -116,4 +118,5 @@
       }
     </div>
   }
+  </div>
 </div>
