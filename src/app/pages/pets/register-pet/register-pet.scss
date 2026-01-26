@@ -1,3 +1,20 @@
-// Estilos customizados se necessário
-// O Tailwind cuida da maioria dos estilos
+// // Estilos customizados se necessário
+// // O Tailwind cuida da maioria dos estilos
 
+// /* REMOVE A BORDA DA BUSCA */
+// ::ng-deep .custom-search-field .mdc-notched-outline {
+//     border: none !important;
+//     display: none !important;
+// }
+
+// ::ng-deep .custom-search-field .mat-mdc-text-field-wrapper {
+//     padding: 0 !important;
+//     background-color: transparent !important;
+// }
+
+// ::ng-deep .custom-search-field .mat-mdc-form-field-infix {
+//     padding-top: 0 !important;
+//     padding-bottom: 0 !important;
+//     min-height: auto !important;
+//     border-top: 0 !important;
+// }

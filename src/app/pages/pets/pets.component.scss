@@ -1,0 +1,38 @@
+/* Remove a linha inferior padrão do Material para criar o estilo "Pill/Cápsula" */
+.custom-search-field .mat-mdc-text-field-wrapper {
+    background-color: transparent !important;
+}
+
+.custom-search-field .mdc-line-ripple {
+    display: none !important;
+}
+
+.custom-search-field .mdc-notched-outline {
+    display: none !important;
+    /* Remove a borda padrão do outline */
+}
+
+/* Remove a borda/linha interna padrão do Angular Material */
+::ng-deep .custom-search-field .mdc-notched-outline {
+    display: none !important;
+}
+
+/* Remove o padding e a altura mínima padrão do Material */
+::ng-deep .custom-search-field .mat-mdc-text-field-wrapper {
+    padding: 0 !important;
+    height: auto !important;
+    background-color: transparent !important;
+}
+
+/* Remove o espaço reservado para erro embaixo (deixa o input mais baixo) */
+::ng-deep .custom-search-field .mat-mdc-form-field-subscript-wrapper {
+    display: none !important;
+}
+
+/* Centraliza o input verticalmente */
+::ng-deep .custom-search-field .mat-mdc-form-field-infix {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    min-height: auto !important;
+    border-top: 0 !important;
+}
