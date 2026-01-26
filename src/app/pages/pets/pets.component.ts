@@ -1,30 +1,18 @@
 import { Component, inject, OnInit, OnDestroy, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { SharedModule } from '../../shared/shared.module';
 import { Router } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatChipsModule } from '@angular/material/chips';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 import { ApiService } from '../../core/services/api.service';
 import { UtilService } from '../../core/services/util.service';
 import { PetsResponse } from '../../core/models/pets.model';
-import { LoaderPersonalized } from '../../components_utils/loader-personalized/loader-personalized';
+
 
 @Component({
   selector: 'app-pets',
   standalone: true,
   imports: [
-    CommonModule,
     SharedModule,
-    ReactiveFormsModule,
-    // LoaderPersonalized
   ],
   templateUrl: './pets.component.html',
   styleUrl: './pets.component.scss'

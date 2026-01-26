@@ -1,19 +1,4 @@
 <div class="max-w-7xl mx-auto p-6">
-  <!-- Header -->
-  <div class="flex justify-between items-center mb-8 flex-wrap gap-4">
-    <div class="flex items-center gap-4">
-      <mat-icon class="text-blue-600 !text-4xl !w-9 !h-9">pets</mat-icon>
-      <h1 class="text-3xl font-medium text-gray-800 m-0">Gerenciamento de Pets</h1>
-    </div>
-    <button mat-raised-button color="primary" (click)="navRegisterPet()" class="!flex !items-center !gap-2 !h-11 !px-6">
-      <mat-icon>add</mat-icon>
-      Cadastrar Pet
-    </button>
-    <button mat-raised-button color="primary" (click)="navTutors()" class="!flex !items-center !gap-2 !h-11 !px-6">
-      <mat-icon>add</mat-icon>
-      Tutores
-    </button>
-  </div>
 
   <!-- Busca -->
   <div class="mb-6">
@@ -35,9 +20,14 @@
   <!-- Lista de Pets -->
   <div class="max-h-[calc(100vh-300px)] overflow-y-auto" (scroll)="onScroll($event)">
     @if (!loading() && filteredPets.length > 0) {
+      @if ( filteredPets.length > 0) {
+      <div class="text-center py-6 text-gray-700">
+        <p>Total de pets ({{ totalElements }})</p>
+      </div>
+      }
+
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-6">
       @for (pet of filteredPets; track pet.id) {
-
 
         <mat-card class="cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl flex flex-col h-full" (click)="viewPetDetails(pet.id)">
           <div class="relative w-full h-48 overflow-hidden bg-gray-100">

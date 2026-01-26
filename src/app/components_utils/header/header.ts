@@ -1,7 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, inject, computed, signal, effect } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { SharedModule } from '../../shared/shared.module';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -16,8 +17,24 @@ export class Header {
   private router = inject(Router);
   private authService = inject(AuthService);
 
+  private currentRoute = signal(this.router.url);
+
+  isVisible = computed(() => {
+    const route = this.currentRoute();
+    return route !== '/login';
+  });
+
   isAuthenticated = this.authService.isAuthenticated;
   mobileMenuOpen = signal(false);
+
+  constructor() {
+    // Atualiza a rota atual quando houver navegação
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: any) => {
+        this.currentRoute.set(event.url);
+      });
+  }
 
   toggleMobileMenu(): void {
     this.mobileMenuOpen.update(value => !value);
