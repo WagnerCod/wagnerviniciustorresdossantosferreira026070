@@ -31,6 +31,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatBadgeModule } from '@angular/material/badge';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const materialModules = [
     MatButtonModule,
@@ -67,10 +68,12 @@ const materialModules = [
 @NgModule({
     imports: [
         CommonModule,
+        ReactiveFormsModule,
         ...materialModules
     ],
     exports: [
         CommonModule,
+        ReactiveFormsModule,
         ...materialModules
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]

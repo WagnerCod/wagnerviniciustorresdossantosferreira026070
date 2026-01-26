@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UpdateTutors } from './update-tutors';
+import { PetTutor } from './pet-tutor';
 
-describe('UpdateTutors', () => {
-  let component: UpdateTutors;
-  let fixture: ComponentFixture<UpdateTutors>;
+describe('PetTutor', () => {
+  let component: PetTutor;
+  let fixture: ComponentFixture<PetTutor>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [UpdateTutors]
+      imports: [PetTutor]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(UpdateTutors);
+    fixture = TestBed.createComponent(PetTutor);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

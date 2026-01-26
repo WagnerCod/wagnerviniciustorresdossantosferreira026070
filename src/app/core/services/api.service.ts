@@ -309,6 +309,34 @@ export class ApiService {
         return this.deletePhoto('pets', petId, fotoId);
     }
 
+    // ==================== MÉTODOS DE VINCULAÇÃO PET-TUTOR ====================
+
+    /**
+     * Vincula um pet a um tutor
+     */
+    linkPetToTutor(tutorId: number, petId: number): Observable<void> {
+        this.setLoading(true);
+        return this.http.post<void>(`${this.BASE_URL}/tutores/${tutorId}/pets/${petId}`, {})
+            .pipe(
+                tap(() => this.clearError()),
+                catchError(error => this.handleError(error)),
+                finalize(() => this.setLoading(false))
+            );
+    }
+
+    /**
+     * Remove vinculação de um pet com um tutor
+     */
+    unlinkPetFromTutor(tutorId: number, petId: number): Observable<void> {
+        this.setLoading(true);
+        return this.http.delete<void>(`${this.BASE_URL}/tutores/${tutorId}/pets/${petId}`)
+            .pipe(
+                tap(() => this.clearError()),
+                catchError(error => this.handleError(error)),
+                finalize(() => this.setLoading(false))
+            );
+    }
+
     // ==================== MÉTODOS AUXILIARES ====================
 
     /**
