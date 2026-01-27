@@ -152,15 +152,16 @@ export class Tutors implements OnInit, OnDestroy {
     this.router.navigate(['/tutors/update', id]);
   }
 
-  viewTutorDetails(id: number): void {
-    this.router.navigate(['/tutors', id]);
+
+  navTutorDetail(tutorId: number): void {
+    this.router.navigate(['/tutor-details', tutorId]);
   }
 
   getImageUrl(tutor: TutoresResponse): string {
     if (tutor.foto?.url) {
       return tutor.foto.url;
     }
-    return 'https://via.placeholder.com/200x200?text=Sem+Foto';
+    return '';
   }
 
   hasPhoto(tutor: TutoresResponse): boolean {
@@ -171,6 +172,8 @@ export class Tutors implements OnInit, OnDestroy {
     if (!phone) return 'Não informado';
     return this.util.formatPhone(phone.toString());
   }
+
+
 
 
   deleteTutors(tutors: TutoresResponse): void {

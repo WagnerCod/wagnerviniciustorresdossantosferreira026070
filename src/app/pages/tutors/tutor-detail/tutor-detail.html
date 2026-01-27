@@ -1,1 +1,207 @@
-<app-pet-tutor></app-pet-tutor>
+<app-loader-personalized [isLoading]="loading()"></app-loader-personalized>
+
+<div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 min-h-screen bg-slate-50">
+
+  @if (!loading() && tutor) {
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+    <button mat-icon-button (click)="goBack()"
+      class="!bg-white !shadow-sm hover:!bg-slate-100 !text-slate-600 transition-colors">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+
+    <div class="flex gap-3 w-full sm:w-auto">
+      <button mat-flat-button (click)="editTutor()"
+        class="!bg-teal-100 !text-teal-800 hover:!bg-teal-200 !rounded-full !px-6 !flex-1 sm:!flex-none shadow-sm">
+        <mat-icon class="mr-2 icon-sm">edit</mat-icon>
+        Editar
+      </button>
+      <button mat-flat-button color="warn" (click)="deleteTutor()"
+        class="!bg-red-50 !text-red-600 hover:!bg-red-100 !rounded-full !px-6 !flex-1 sm:!flex-none shadow-sm">
+        <mat-icon class="mr-2 icon-sm">delete</mat-icon>
+        Excluir
+      </button>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+    <!-- Informações do Tutor -->
+    <div class="lg:col-span-2 flex flex-col gap-6">
+
+      <mat-card class="!rounded-[2.5rem] !border-none !shadow-lg overflow-hidden bg-white">
+        <div class="relative h-80 sm:h-96 w-full bg-slate-100">
+          @if(hasPhoto()){
+          <img [src]="getImageUrl()" [alt]="tutor.nome"
+            [class]="hasPhoto() ? 'w-full h-full object-cover' : 'w-full h-full object-cover opacity-30 mix-blend-multiply'">
+          }
+
+          @if (!hasPhoto()) {
+          <div class="absolute inset-0 flex flex-col items-center justify-center bg-teal-50">
+            <mat-icon class="!text-teal-200 !text-[100px] !w-[100px] !h-[100px]">person</mat-icon>
+            <span class="text-teal-300 font-medium mt-2">Sem foto disponível</span>
+          </div>
+          }
+
+          <div class="absolute top-6 right-6">
+            <span
+              class="bg-white/90 backdrop-blur-sm text-slate-600 text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
+              ID: #{{ tutor.id }}
+            </span>
+          </div>
+        </div>
+
+        <mat-card-content class="!p-8">
+          <div class="flex flex-col gap-6">
+            <div>
+              <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-800 tracking-tight mb-2">
+                {{ tutor.nome }}
+              </h1>
+              <div class="h-1 w-20 bg-teal-500 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 gap-4">
+              @if (tutor.cpf) {
+              <div class="flex items-center p-4 bg-purple-50 rounded-2xl border border-purple-100">
+                <div class="bg-white p-2.5 rounded-full shadow-sm mr-4 text-purple-500">
+                  <mat-icon>badge</mat-icon>
+                </div>
+                <div>
+                  <p class="text-xs text-purple-600 font-bold uppercase tracking-wide mb-0.5">CPF</p>
+                  <p class="text-lg text-slate-700 font-semibold">{{ formatCPF(tutor.cpf) }}</p>
+                </div>
+              </div>
+              }
+
+              <div class="flex items-center p-4 bg-blue-50 rounded-2xl border border-blue-100 cursor-pointer hover:bg-blue-100 transition-colors"
+                (click)="callTutor()">
+                <div class="bg-white p-2.5 rounded-full shadow-sm mr-4 text-blue-500">
+                  <mat-icon>phone</mat-icon>
+                </div>
+                <div class="flex-1">
+                  <p class="text-xs text-blue-600 font-bold uppercase tracking-wide mb-0.5">Telefone</p>
+                  <p class="text-lg text-slate-700 font-semibold">{{ formatPhone(tutor.telefone) }}</p>
+                </div>
+                <mat-icon class="text-blue-400">call</mat-icon>
+              </div>
+
+              @if (tutor.email) {
+              <div class="flex items-center p-4 bg-orange-50 rounded-2xl border border-orange-100 cursor-pointer hover:bg-orange-100 transition-colors"
+                (click)="emailTutor()">
+                <div class="bg-white p-2.5 rounded-full shadow-sm mr-4 text-orange-500">
+                  <mat-icon>email</mat-icon>
+                </div>
+                <div class="flex-1 overflow-hidden">
+                  <p class="text-xs text-orange-600 font-bold uppercase tracking-wide mb-0.5">E-mail</p>
+                  <p class="text-lg text-slate-700 font-semibold truncate">{{ tutor.email }}</p>
+                </div>
+                <mat-icon class="text-orange-400">send</mat-icon>
+              </div>
+              }
+
+              @if (tutor.endereco) {
+              <div class="flex items-start p-4 bg-green-50 rounded-2xl border border-green-100">
+                <div class="bg-white p-2.5 rounded-full shadow-sm mr-4 text-green-500">
+                  <mat-icon>location_on</mat-icon>
+                </div>
+                <div class="flex-1">
+                  <p class="text-xs text-green-600 font-bold uppercase tracking-wide mb-0.5">Endereço</p>
+                  <p class="text-base text-slate-700 font-medium leading-relaxed">{{ tutor.endereco }}</p>
+                </div>
+              </div>
+              }
+            </div>
+
+            @if (tutor.foto) {
+            <div class="flex items-center gap-2 text-slate-400 text-sm mt-2 px-2">
+              <mat-icon class="!text-sm !w-4 !h-4">image</mat-icon>
+              <span>Ref. Foto: {{ tutor.foto.id }}</span>
+            </div>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Pets Vinculados -->
+    <div class="lg:col-span-1">
+      @if (tutor.pets && tutor.pets.length > 0) {
+      <div class="flex flex-col gap-4">
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
+          <div class="flex items-center gap-2 mb-4">
+            <mat-icon class="text-teal-600">pets</mat-icon>
+            <h3 class="text-lg font-bold text-slate-800">Pets Vinculados</h3>
+            <span class="ml-auto bg-teal-100 text-teal-700 text-xs font-bold px-2 py-1 rounded-full">
+              {{ tutor.pets.length }}
+            </span>
+          </div>
+        </div>
+
+        @for (pet of tutor.pets; track pet.id) {
+        <mat-card class="!rounded-2xl !border-none !shadow-lg bg-white relative overflow-hidden cursor-pointer hover:shadow-xl transition-shadow"
+          (click)="viewPetDetail(pet.id)">
+          
+          <div class="relative h-48 w-full bg-slate-100">
+            @if (hasPetPhoto(pet)) {
+            <img [src]="getPetImageUrl(pet)" [alt]="pet.nome"
+              class="w-full h-full object-cover">
+            } @else {
+            <div class="absolute inset-0 flex items-center justify-center bg-teal-50">
+              <mat-icon class="!text-teal-200 !text-[60px] !w-[60px] !h-[60px]">pets</mat-icon>
+            </div>
+            }
+
+            <div class="absolute top-3 right-3">
+              <span class="bg-white/90 backdrop-blur-sm text-slate-600 text-xs font-bold px-2 py-1 rounded-full shadow-sm">
+                #{{ pet.id }}
+              </span>
+            </div>
+          </div>
+
+          <mat-card-content class="!p-4">
+            <h4 class="text-xl font-bold text-slate-800 mb-3">{{ pet.nome }}</h4>
+            
+            <div class="flex flex-col gap-2">
+              <div class="flex items-center gap-2 text-sm">
+                <mat-icon class="!text-base text-orange-500">category</mat-icon>
+                <span class="text-slate-600">{{ pet.raca }}</span>
+              </div>
+              
+              <div class="flex items-center gap-2 text-sm">
+                <mat-icon class="!text-base text-blue-500">cake</mat-icon>
+                <span class="text-slate-600">{{ pet.idade }} {{ pet.idade === 1 ? 'ano' : 'anos' }}</span>
+              </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-100">
+              <button mat-stroked-button color="primary"
+                class="!rounded-xl !border-teal-200 !text-teal-700 hover:!bg-teal-50 w-full">
+                Ver Detalhes
+                <mat-icon class="ml-1 !text-base">arrow_forward</mat-icon>
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        }
+      </div>
+      } @else {
+      <div
+        class="bg-white rounded-[2rem] p-8 text-center shadow-sm border-2 border-dashed border-slate-200 flex flex-col items-center justify-center h-full min-h-[400px]">
+        <div class="bg-slate-50 p-4 rounded-full mb-4">
+          <mat-icon class="!text-slate-300 !text-5xl !w-12 !h-12">pets</mat-icon>
+        </div>
+        <h3 class="text-lg font-bold text-slate-600 mb-2">Sem Pets Vinculados</h3>
+        <p class="text-slate-500 text-sm mb-6 max-w-[220px]">
+          Vincule um pet a este tutor para facilitar o gerenciamento.
+        </p>
+        <button mat-flat-button (click)="linkPet()"
+          class="!rounded-full !bg-teal-600 !text-white hover:!bg-teal-700 !px-6">
+          <mat-icon class="mr-2">add</mat-icon>
+          Vincular Pet
+        </button>
+      </div>
+      }
+    </div>
+
+  </div>
+  }
+</div>

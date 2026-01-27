@@ -96,8 +96,12 @@ export class AuthService {
         this.isRefreshing = true;
         console.log(`Tentando renovar token (tentativa ${this.failedRefreshAttempts + 1}/${this.MAX_REFRESH_ATTEMPTS})...`);
 
-        return this.http.put<RefreshTokenResponse>(`${this.API_URL}/refresh`, {
-            refreshToken
+        const headers = {
+            'Authorization': `Bearer ${refreshToken}`
+        };
+
+        return this.http.put<RefreshTokenResponse>(`${this.API_URL}/refresh`, {}, {
+            headers: headers
         }).pipe(
             tap(response => {
                 console.log('Token renovado com sucesso');

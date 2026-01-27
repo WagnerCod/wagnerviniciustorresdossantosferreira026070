@@ -1,13 +1,155 @@
-import { Component } from '@angular/core';
-import { PetTutor } from '../../pet-tutor/pet-tutor';
+import { Component, inject, OnInit, OnDestroy, signal } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
+import { ApiService } from '../../../core/services/api.service';
+import { UtilService } from '../../../core/services/util.service';
+import { TutoresResponse } from '../../../core/models/tutores.model';
+import { SharedModule } from './../../../shared/shared.module';
+import { LoaderPersonalized } from '../../../components_utils/loader-personalized/loader-personalized';
+
 
 @Component({
   selector: 'app-tutor-detail',
-  imports: [PetTutor],
+  imports: [SharedModule, LoaderPersonalized],
   templateUrl: './tutor-detail.html',
   styleUrl: './tutor-detail.scss',
   standalone: true
 })
-export class TutorDetail {
+export class TutorDetail implements OnInit, OnDestroy {
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private apiService = inject(ApiService);
+  utilService = inject(UtilService);
+  private destroy$ = new Subject<void>();
+
+  tutor: TutoresResponse | null = null;
+  loading = signal(false);
+  tutorId!: number;
+
+  ngOnInit(): void {
+    console.log('TutorDetail inicializado');
+    this.route.params
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(params => {
+        console.log('Parâmetros da rota:', params);
+        this.tutorId = +params['id'];
+        if (this.tutorId && !isNaN(this.tutorId)) {
+          console.log('ID do tutor válido:', this.tutorId);
+          this.loadTutorDetails();
+        } else {
+          console.error('ID do tutor inválido:', params['id']);
+          this.utilService.showError('ID do tutor inválido');
+          this.goBack();
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  loadTutorDetails(): void {
+    console.log('Carregando detalhes do tutor ID:', this.tutorId);
+    this.loading.set(true);
+    this.apiService.getTutorById(this.tutorId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (tutor) => {
+          console.log('Tutor recebido:', tutor);
+          this.tutor = tutor;
+          this.loading.set(false);
+
+          if (tutor.pets && tutor.pets.length > 0) {
+            console.log('Total de pets:', tutor.pets.length);
+          } else {
+            console.log('Tutor sem pets cadastrados');
+          }
+        },
+        error: (error) => {
+          console.error('Erro ao carregar tutor:', error);
+          this.loading.set(false);
+          this.utilService.showError('Erro ao carregar detalhes do tutor');
+          setTimeout(() => this.goBack(), 2000);
+        }
+      });
+  }
+
+  getImageUrl(): string {
+    if (this.tutor?.foto?.url) {
+      return this.tutor.foto.url;
+    }
+    return 'https://via.placeholder.com/400x300?text=Sem+Foto';
+  }
+
+  hasPhoto(): boolean {
+    return !!this.tutor?.foto?.url;
+  }
+
+  goBack(): void {
+    this.router.navigate(['/tutors']);
+  }
+
+  editTutor(): void {
+    this.router.navigate(['/tutors/update', this.tutorId]);
+  }
+
+  deleteTutor(): void {
+    if (confirm(`Tem certeza que deseja excluir ${this.tutor?.nome}?`)) {
+      this.apiService.deleteTutor(this.tutorId)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            this.utilService.showSuccess('Tutor excluído com sucesso!');
+            this.goBack();
+          },
+          error: (error) => {
+            this.utilService.showError('Erro ao excluir tutor: ' + error.message);
+          }
+        });
+    }
+  }
+
+  formatPhone(phone: string): string {
+    return this.utilService.formatPhone(phone);
+  }
+
+  formatCPF(cpf: string | number | null): string {
+    if (!cpf) return 'Não informado';
+    return this.utilService.maskCPF(this.utilService.formatCPF(cpf.toString()));
+  }
+
+  callTutor(): void {
+    if (this.tutor?.telefone) {
+      window.location.href = `tel:${this.tutor.telefone}`;
+    }
+  }
+
+  emailTutor(): void {
+    if (this.tutor?.email) {
+      window.location.href = `mailto:${this.tutor.email}`;
+    }
+  }
+
+  viewPetDetail(petId: number): void {
+    this.router.navigate(['/pets', petId]);
+  }
+
+  linkPet(): void {
+    this.router.navigate(['/pet-tutor'], {
+      queryParams: { tutorId: this.tutorId }
+    });
+  }
+
+  getPetImageUrl(pet: any): string {
+    if (pet?.foto?.url) {
+      return pet.foto.url;
+    }
+    return 'https://via.placeholder.com/150?text=Sem+Foto';
+  }
+
+  hasPetPhoto(pet: any): boolean {
+    return !!pet?.foto?.url;
+  }
 
 }

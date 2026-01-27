@@ -21,7 +21,7 @@ export class Header {
 
   isVisible = computed(() => {
     const route = this.currentRoute();
-    return route !== '/login';
+    return route !== '/login' && route !== '/login?sessionExpired=true&reason=refresh_expired';
   });
 
   isAuthenticated = this.authService.isAuthenticated;
