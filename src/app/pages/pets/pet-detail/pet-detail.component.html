@@ -186,7 +186,7 @@
         <h3 class="text-lg font-bold text-slate-600 mb-2">Sem Tutor Vinculado</h3>
         <p class="text-slate-500 text-sm mb-6 max-w-[200px]">Adicione um tutor para facilitar o contato em emergências.
         </p>
-        <button mat-flat-button color="primary" class="!rounded-full !bg-teal-600">
+        <button (click)="navPetTutor(pet.id)" mat-flat-button color="primary" class="!rounded-full !bg-teal-600">
           Vincular Tutor
         </button>
       </div>

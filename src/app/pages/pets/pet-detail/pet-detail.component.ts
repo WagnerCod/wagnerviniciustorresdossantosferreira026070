@@ -65,7 +65,7 @@ export class PetDetailComponent implements OnInit, OnDestroy {
                     console.log('Pet recebido:', pet);
                     this.pet = pet;
                     this.loading.set(false);
-                    
+
                     // Se o pet tiver tutores, usar o primeiro como principal
                     if (pet.tutores && pet.tutores.length > 0) {
                         this.tutores = pet.tutores;
@@ -139,5 +139,11 @@ export class PetDetailComponent implements OnInit, OnDestroy {
         if (this.tutor?.email) {
             window.location.href = `mailto:${this.tutor.email}`;
         }
+    }
+
+    navPetTutor(petId: number): void {
+        this.router.navigate(['/pet-tutor'], {
+            queryParams: { petId: petId }
+        });
     }
 }

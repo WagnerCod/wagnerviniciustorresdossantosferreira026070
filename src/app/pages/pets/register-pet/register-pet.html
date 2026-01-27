@@ -48,7 +48,7 @@
 
               <mat-form-field appearance="outline" class="!w-full !m-0 no-border">
                 <mat-label class="!text-slate-400">Nome do Pet</mat-label>
-                <input matInput formControlName="nome" [disabled]="loading" class="!text-slate-700 font-medium">
+                <input matInput formControlName="nome" class="!text-slate-700 font-medium">
                 @if (petForm.get('nome')?.invalid && petForm.get('nome')?.touched) {
                 <mat-error>{{ getErrorMessage('nome') }}</mat-error>
                 }
@@ -63,7 +63,7 @@
 
                 <mat-form-field appearance="outline" class="!w-full !m-0 no-border">
                   <mat-label class="!text-slate-400">Raça</mat-label>
-                  <input matInput formControlName="raca" [disabled]="loading" class="!text-slate-700">
+                  <input matInput formControlName="raca" class="!text-slate-700">
                 </mat-form-field>
               </div>
 
@@ -74,7 +74,7 @@
 
                 <mat-form-field appearance="outline" class="!w-full !m-0 no-border">
                   <mat-label class="!text-slate-400">Idade</mat-label>
-                  <input matInput type="number" formControlName="idade" [disabled]="loading" class="!text-slate-700">
+                  <input matInput type="number" formControlName="idade" class="!text-slate-700">
                   <span matSuffix class="text-slate-400 text-sm font-medium">anos</span>
                 </mat-form-field>
               </div>

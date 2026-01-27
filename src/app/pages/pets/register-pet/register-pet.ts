@@ -87,7 +87,8 @@ export class RegisterPet implements OnInit {
     }
 
     this.loading = true;
-    const petData: Pets = this.petForm.value;
+    this.petForm.disable();
+    const petData: Pets = this.petForm.getRawValue();
 
     this.apiService.createPet(petData).subscribe({
       next: (response) => {
@@ -102,6 +103,7 @@ export class RegisterPet implements OnInit {
       },
       error: (error) => {
         this.loading = false;
+        this.petForm.enable();
         this.utilService.showError(
           error.message || 'Erro ao cadastrar pet. Tente novamente.'
         );
@@ -122,6 +124,7 @@ export class RegisterPet implements OnInit {
       },
       error: (error) => {
         this.loading = false;
+        this.petForm.enable();
         this.utilService.showWarning(
           'Pet cadastrado, mas houve erro ao enviar a foto: ' + error.message
         );

@@ -120,10 +120,12 @@ export class ApiService {
             .pipe(
                 tap(updatedItem => {
                     const current = this.getDataSubject(resource).value;
-                    const index = current.findIndex((item: any) => item.id === id);
-                    if (index !== -1) {
-                        current[index] = updatedItem;
-                        this.getDataSubject(resource).next([...current]);
+                    if (Array.isArray(current)) {
+                        const index = current.findIndex((item: any) => item.id === id);
+                        if (index !== -1) {
+                            current[index] = updatedItem;
+                            this.getDataSubject(resource).next([...current]);
+                        }
                     }
                     this.getItemSubject(resource).next(updatedItem);
                     this.clearError();
@@ -142,7 +144,9 @@ export class ApiService {
             .pipe(
                 tap(() => {
                     const current = this.getDataSubject(resource).value;
-                    this.getDataSubject(resource).next(current.filter((item: any) => item.id !== id));
+                    if (Array.isArray(current)) {
+                        this.getDataSubject(resource).next(current.filter((item: any) => item.id !== id));
+                    }
                     this.clearError();
                 }),
                 catchError(error => this.handleError(error)),
