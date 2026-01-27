@@ -24,29 +24,23 @@
             <!-- @if (isAuthenticated()) { -->
             <nav class="hidden md:flex items-center gap-1">
 
-                <button mat-button (click)="navigateTo('/pets')"
+                <button mat-button [matMenuTriggerFor]="petsMenu"
                     class="!rounded-full !px-5 !py-1 !text-slate-600 hover:!bg-teal-50 hover:!text-teal-700 transition-all">
                     <div class="flex items-center gap-2">
                         <mat-icon class="icon-sm">pets</mat-icon>
                         <span class="font-medium">Meus Pets</span>
+                        <mat-icon class="icon-xs !w-4 !h-4 !text-[16px]">expand_more</mat-icon>
                     </div>
                 </button>
 
-                <button mat-button (click)="navigateTo('/pets/register')"
-                    class="!rounded-full !px-5 !py-1 !text-slate-600 hover:!bg-teal-50 hover:!text-teal-700 transition-all">
-                    <div class="flex items-center gap-2">
-                        <mat-icon class="icon-sm">add_circle_outline</mat-icon>
-                        <span class="font-medium">Novo Pet</span>
-                    </div>
-                </button>
-
-                <button mat-button (click)="navigateTo('/pet-tutor')"
-                    class="!rounded-full !px-5 !py-1 !text-slate-600 hover:!bg-teal-50 hover:!text-teal-700 transition-all">
-                    <div class="flex items-center gap-2">
-                        <mat-icon class="icon-sm">link</mat-icon>
-                        <span class="font-medium">Vincular Pet ao tutor</span>
-                    </div>
-                </button>
+                <mat-menu #petsMenu="matMenu" class="custom-menu-panel">
+                    <button mat-menu-item (click)="navigateTo('/pets')">
+                        <mat-icon>list</mat-icon> <span>Listar Pets</span>
+                    </button>
+                    <button mat-menu-item (click)="navigateTo('/pets/register')">
+                        <mat-icon>add_circle_outline</mat-icon> <span>Novo Pet</span>
+                    </button>
+                </mat-menu>
 
                 <button mat-button [matMenuTriggerFor]="tutorsMenu"
                     class="!rounded-full !px-5 !py-1 !text-slate-600 hover:!bg-teal-50 hover:!text-teal-700 transition-all">
@@ -65,6 +59,14 @@
                         <mat-icon>person_add</mat-icon> <span>Novo Tutor</span>
                     </button>
                 </mat-menu>
+
+                <button mat-button (click)="navigateTo('/pet-tutor')"
+                    class="!rounded-full !px-5 !py-1 !text-slate-600 hover:!bg-teal-50 hover:!text-teal-700 transition-all">
+                    <div class="flex items-center gap-2">
+                        <mat-icon class="icon-sm">link</mat-icon>
+                        <span class="font-medium">Vincular Pet ao tutor</span>
+                    </div>
+                </button>
 
                 <div class="h-8 w-px bg-slate-200 mx-2"></div>
 
@@ -90,14 +92,14 @@
             </nav>
             
 
-            @if (!isAuthenticated()) {
+            <!-- @if (!isAuthenticated()) {
             <div class="hidden md:flex items-center space-x-3">
                 <button mat-flat-button (click)="navigateTo('/login')"
                     class="!bg-teal-600 !text-white !rounded-full !px-8 hover:!bg-teal-700 shadow-lg shadow-teal-500/30">
                     Acessar Conta
                 </button>
             </div>
-            }
+            } -->
 
             @if (isAuthenticated()) {
             <button mat-icon-button (click)="toggleMobileMenu()" class="md:!hidden !text-slate-600 hover:!bg-slate-100">

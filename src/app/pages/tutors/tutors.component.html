@@ -53,11 +53,11 @@
         class="group !rounded-[2rem] !bg-white !border-none !shadow-sm hover:!shadow-xl hover:!-translate-y-2 transition-all duration-300 h-full flex flex-col relative overflow-hidden"
         (click)="navTutorDetail(tutor.id)">
 
-        <button mat-icon-button (click)="deleteTutors(tutor); $event.stopPropagation()"
+        <!-- <button mat-icon-button (click)="deleteTutors(tutor); $event.stopPropagation()"
           class="!absolute !top-2 !right-2 !z-10 !text-slate-300 hover:!text-red-500 hover:!bg-red-50 transition-colors"
           matTooltip="Excluir Tutor">
           <mat-icon>delete_outline</mat-icon>
-        </button>
+        </button> -->
 
         <div class="relative pt-8 pb-4 flex flex-col items-center bg-gradient-to-b from-slate-50 to-white">
           <div class="relative">
@@ -90,7 +90,7 @@
               <div class="bg-blue-50 p-1.5 rounded-lg text-blue-500 group-hover/item:bg-blue-100 transition-colors">
                 <mat-icon class="!text-lg !w-5 !h-5 flex items-center justify-center">email</mat-icon>
               </div>
-              <span class="text-sm truncate font-medium">{{ tutor.email }}</span>
+              <span class="text-sm truncate font-medium">{{ tutor.email || 'Não Informado'}}</span>
             </div>
 
             <div class="flex items-center gap-3 text-slate-600 group/item">
@@ -139,11 +139,11 @@
                   {{ pet.nome }}
                 </span>
 
-                <button (click)="deletePetTutor(tutor.id, pet.id); $event.stopPropagation()"
+                <!-- <button (click)="deletePetTutor(tutor.id, pet.id); $event.stopPropagation()"
                   class="w-4 h-4 rounded-full bg-slate-200 text-slate-500 hover:bg-red-500 hover:text-white flex items-center justify-center transition-colors ml-1"
                   matTooltip="Desvincular pet">
                   <mat-icon class="!text-[10px] !w-3 !h-3 flex items-center justify-center">close</mat-icon>
-                </button>
+                </button> -->
               </div>
               }
             </div>
@@ -158,14 +158,14 @@
 
         </mat-card-content>
 
-        <mat-card-actions class="!p-4 !pt-0">
+        <!-- <mat-card-actions class="!p-4 !pt-0">
           <button mat-stroked-button color="primary"
             class="!w-full !rounded-xl !border-slate-200 !text-slate-600 hover:!bg-teal-50 hover:!border-teal-200 hover:!text-teal-700 transition-all"
             (click)="navUpdateTutor(tutor.id); $event.stopPropagation()">
             <mat-icon class="mr-2 icon-sm">edit</mat-icon>
             Editar Dados
           </button>
-        </mat-card-actions>
+        </mat-card-actions> -->
       </mat-card>
       }
     </div>
