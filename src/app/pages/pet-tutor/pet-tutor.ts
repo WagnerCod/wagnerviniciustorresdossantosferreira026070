@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -26,7 +26,7 @@ export class PetTutor implements OnInit {
   private utilService = inject(UtilService);
 
   vinculacaoForm!: FormGroup;
-  loading = false;
+  loading = signal(false);
 
   // Listas
   tutoresList: TutoresResponse[] = [];
@@ -115,59 +115,59 @@ export class PetTutor implements OnInit {
   }
 
   private loadTutorById(id: number): void {
-    this.loading = true;
+    this.loading.set(true);
     this.apiService.getTutorById(id).subscribe({
       next: (tutor) => {
         this.selectedTutor = tutor;
         this.vinculacaoForm.patchValue({ tutorId: tutor.id });
-        this.loading = false;
+        this.loading.set(false);
       },
       error: (error) => {
         this.utilService.showError('Erro ao carregar tutor');
-        this.loading = false;
+        this.loading.set(false);
       }
     });
   }
 
   private loadPetById(id: number): void {
-    this.loading = true;
+    this.loading.set(true);
     this.apiService.getPetById(id).subscribe({
       next: (pet) => {
         this.selectedPet = pet;
         this.vinculacaoForm.patchValue({ petId: pet.id });
-        this.loading = false;
+        this.loading.set(false);
       },
       error: (error) => {
         this.utilService.showError('Erro ao carregar pet');
-        this.loading = false;
+        this.loading.set(false);
       }
     });
   }
 
   private loadTutoresList(): void {
-    this.loading = true;
+    this.loading.set(true);
     this.apiService.getTutores(0, 100).subscribe({
       next: (response) => {
         this.tutoresList = response.content;
-        this.loading = false;
+        this.loading.set(false);
       },
       error: (error) => {
         this.utilService.showError('Erro ao carregar lista de tutores');
-        this.loading = false;
+        this.loading.set(false);
       }
     });
   }
 
   private loadPetsList(): void {
-    this.loading = true;
+    this.loading.set(true);
     this.apiService.getPets(0, 100).subscribe({
       next: (response) => {
         this.petsList = response.content;
-        this.loading = false;
+        this.loading.set(false);
       },
       error: (error) => {
         this.utilService.showError('Erro ao carregar lista de pets');
-        this.loading = false;
+        this.loading.set(false);
       }
     });
   }
@@ -201,16 +201,16 @@ export class PetTutor implements OnInit {
   }
 
   private vincularPetTutor(tutorId: number, petId: number): void {
-    this.loading = true;
+    this.loading.set(true);
     this.apiService.linkPetToTutor(tutorId, petId).subscribe({
       next: () => {
         this.utilService.showSuccess('Pet vinculado ao tutor com sucesso!');
-        this.loading = false;
+        this.loading.set(false);
         this.router.navigate(['/tutors']);
       },
       error: (error) => {
         this.utilService.showError('Erro ao vincular pet ao tutor');
-        this.loading = false;
+        this.loading.set(false);
       }
     });
   }

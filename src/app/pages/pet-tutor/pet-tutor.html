@@ -201,14 +201,14 @@
           </div>
 
           <div class="flex flex-col-reverse sm:flex-row justify-end gap-3 mt-8 pt-6 border-t border-slate-100">
-            <button type="button" mat-button (click)="cancel()" [disabled]="loading"
+            <button type="button" mat-button (click)="cancel()" [disabled]="loading()"
               class="!rounded-xl !text-slate-500 hover:!bg-slate-100 !h-12 !px-8 w-full sm:w-auto">
               Cancelar
             </button>
 
-            <button type="submit" mat-flat-button color="primary" [disabled]="loading || vinculacaoForm.invalid"
+            <button type="submit" mat-flat-button color="primary" [disabled]="loading() || vinculacaoForm.invalid"
               class="!bg-teal-600 hover:!bg-teal-700 !text-white !rounded-xl !h-12 !px-8 !text-base shadow-lg hover:shadow-teal-500/30 transition-all w-full sm:w-auto">
-              @if (loading) {
+              @if (loading()) {
               <div class="flex items-center gap-2">
                 <mat-spinner diameter="20" color="accent"></mat-spinner>
                 <span>Vinculando...</span>
