@@ -50,16 +50,32 @@
               <div class="h-6 w-px bg-slate-200"></div>
 
               <mat-form-field appearance="outline" class="!w-full !m-0 no-border">
-                <mat-label class="!text-slate-400">Selecione um Tutor da lista</mat-label>
-                <mat-select formControlName="tutorId" (selectionChange)="onTutorChange($event)"
-                  class="!text-slate-700 font-medium">
-                  <mat-option value="">-- Cancelar Seleção --</mat-option>
-                  @for (tutor of tutoresList; track tutor.id) {
-                  <mat-option [value]="tutor.id">
-                    {{ tutor.nome }} <span class="text-slate-400 text-xs ml-2">(CPF: {{ tutor.cpf }})</span>
+                <mat-label class="!text-slate-400">Digite o nome do tutor</mat-label>
+                <input matInput
+                       [formControl]="tutorSearchControl"
+                       [matAutocomplete]="autoTutor"
+                       class="!text-slate-700 font-medium">
+                <mat-autocomplete #autoTutor="matAutocomplete"
+                                  [displayWith]="displayTutorFn.bind(this)"
+                                  (optionSelected)="onTutorSelected($event.option.value)">
+                  @for (tutor of filteredTutores$ | async; track tutor.id) {
+                  <mat-option [value]="tutor">
+                    <div class="flex items-center gap-2">
+                      @if (tutor.foto && tutor.foto.url) {
+                      <img [src]="tutor.foto.url" class="w-8 h-8 rounded-full object-cover">
+                      } @else {
+                      <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
+                        <mat-icon class="!text-sm">person</mat-icon>
+                      </div>
+                      }
+                      <div>
+                        <div class="font-medium">{{ tutor.nome }}</div>
+                        <div class="text-xs text-slate-500">CPF: {{ tutor.cpf }}</div>
+                      </div>
+                    </div>
                   </mat-option>
                   }
-                </mat-select>
+                </mat-autocomplete>
                 @if (vinculacaoForm.get('tutorId')?.hasError('required') && vinculacaoForm.get('tutorId')?.touched) {
                 <mat-error>Selecione um tutor</mat-error>
                 }
@@ -130,16 +146,32 @@
               <div class="h-6 w-px bg-slate-200"></div>
 
               <mat-form-field appearance="outline" class="!w-full !m-0 no-border">
-                <mat-label class="!text-slate-400">Selecione um Pet da lista</mat-label>
-                <mat-select formControlName="petId" (selectionChange)="onPetChange($event)"
-                  class="!text-slate-700 font-medium">
-                  <mat-option value="">-- Cancelar Seleção --</mat-option>
-                  @for (pet of petsList; track pet.id) {
-                  <mat-option [value]="pet.id">
-                    {{ pet.nome }} <span class="text-slate-400 text-xs ml-2">({{ pet.raca }})</span>
+                <mat-label class="!text-slate-400">Digite o nome do pet</mat-label>
+                <input matInput
+                       [formControl]="petSearchControl"
+                       [matAutocomplete]="autoPet"
+                       class="!text-slate-700 font-medium">
+                <mat-autocomplete #autoPet="matAutocomplete"
+                                  [displayWith]="displayPetFn.bind(this)"
+                                  (optionSelected)="onPetSelected($event.option.value)">
+                  @for (pet of filteredPets$ | async; track pet.id) {
+                  <mat-option [value]="pet">
+                    <div class="flex items-center gap-2">
+                      @if (pet.foto && pet.foto.url) {
+                      <img [src]="pet.foto.url" class="w-8 h-8 rounded-full object-cover">
+                      } @else {
+                      <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center">
+                        <mat-icon class="!text-sm">pets</mat-icon>
+                      </div>
+                      }
+                      <div>
+                        <div class="font-medium">{{ pet.nome }}</div>
+                        <div class="text-xs text-slate-500">{{ pet.raca }} • {{ pet.idade }} anos</div>
+                      </div>
+                    </div>
                   </mat-option>
                   }
-                </mat-select>
+                </mat-autocomplete>
                 @if (vinculacaoForm.get('petId')?.hasError('required') && vinculacaoForm.get('petId')?.touched) {
                 <mat-error>Selecione um pet</mat-error>
                 }

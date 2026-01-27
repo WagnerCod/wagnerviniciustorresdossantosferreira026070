@@ -1,6 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { ApiService } from '../../core/services/api.service';
 import { UtilService } from '../../core/services/util.service';
 import { TutoresResponse } from '../../core/models/tutores.model';
@@ -38,8 +40,17 @@ export class PetTutor implements OnInit {
   tutorFromParam = false;
   petFromParam = false;
 
+  // Controles de busca
+  tutorSearchControl = new FormControl('');
+  petSearchControl = new FormControl('');
+
+  // Listas filtradas
+  filteredTutores$!: Observable<TutoresResponse[]>;
+  filteredPets$!: Observable<PetsResponse[]>;
+
   ngOnInit(): void {
     this.initForm();
+    this.initFilterObservables();
     this.checkRouteParams();
   }
 
@@ -48,6 +59,34 @@ export class PetTutor implements OnInit {
       tutorId: [null, Validators.required],
       petId: [null, Validators.required]
     });
+  }
+
+  private initFilterObservables(): void {
+    this.filteredTutores$ = this.tutorSearchControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filterTutores(value || ''))
+    );
+
+    this.filteredPets$ = this.petSearchControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filterPets(value || ''))
+    );
+  }
+
+  private _filterTutores(value: string): TutoresResponse[] {
+    const filterValue = value.toLowerCase();
+    return this.tutoresList.filter(tutor =>
+      tutor.nome.toLowerCase().includes(filterValue) ||
+      tutor.cpf?.toString().includes(filterValue)
+    );
+  }
+
+  private _filterPets(value: string): PetsResponse[] {
+    const filterValue = value.toLowerCase();
+    return this.petsList.filter(pet =>
+      pet.nome.toLowerCase().includes(filterValue) ||
+      pet.raca?.toLowerCase().includes(filterValue)
+    );
   }
 
   private checkRouteParams(): void {
@@ -133,16 +172,22 @@ export class PetTutor implements OnInit {
     });
   }
 
-  onTutorChange(event: any): void {
-    const tutorId = +event.value;
-    const tutor = this.tutoresList.find(t => t.id === tutorId);
-    this.selectedTutor = tutor || null;
+  onTutorSelected(tutor: TutoresResponse): void {
+    this.selectedTutor = tutor;
+    this.vinculacaoForm.patchValue({ tutorId: tutor.id });
   }
 
-  onPetChange(event: any): void {
-    const petId = +event.value;
-    const pet = this.petsList.find(p => p.id === petId);
-    this.selectedPet = pet || null;
+  displayTutorFn(tutor: TutoresResponse): string {
+    return tutor ? tutor.nome : '';
+  }
+
+  onPetSelected(pet: PetsResponse): void {
+    this.selectedPet = pet;
+    this.vinculacaoForm.patchValue({ petId: pet.id });
+  }
+
+  displayPetFn(pet: PetsResponse): string {
+    return pet ? pet.nome : '';
   }
 
   onSubmit(): void {
