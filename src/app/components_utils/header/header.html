@@ -21,7 +21,7 @@
                 <span class="text-xl font-bold text-teal-600 sm:hidden">PM</span>
             </div>
 
-            @if (isAuthenticated()) {
+            <!-- @if (isAuthenticated()) { -->
             <nav class="hidden md:flex items-center gap-1">
 
                 <button mat-button (click)="navigateTo('/pets')"
@@ -37,6 +37,14 @@
                     <div class="flex items-center gap-2">
                         <mat-icon class="icon-sm">add_circle_outline</mat-icon>
                         <span class="font-medium">Novo Pet</span>
+                    </div>
+                </button>
+
+                <button mat-button (click)="navigateTo('/pet-tutor')"
+                    class="!rounded-full !px-5 !py-1 !text-slate-600 hover:!bg-teal-50 hover:!text-teal-700 transition-all">
+                    <div class="flex items-center gap-2">
+                        <mat-icon class="icon-sm">link</mat-icon>
+                        <span class="font-medium">Vincular Pet ao tutor</span>
                     </div>
                 </button>
 
@@ -80,7 +88,7 @@
                     </button>
                 </mat-menu>
             </nav>
-            }
+            
 
             @if (!isAuthenticated()) {
             <div class="hidden md:flex items-center space-x-3">
@@ -117,6 +125,11 @@
                 <button mat-button (click)="navigateTo('/pets/register')"
                     class="!justify-start !text-slate-600 hover:!bg-teal-50 hover:!text-teal-700 !rounded-xl !h-12 !pl-4">
                     <mat-icon class="mr-3">add_circle_outline</mat-icon> Cadastrar Pet
+                </button>
+
+                <button mat-button (click)="navigateTo('/pet-tutor')"
+                    class="!justify-start !text-slate-600 hover:!bg-teal-50 hover:!text-teal-700 !rounded-xl !h-12 !pl-4">
+                    <mat-icon class="mr-3">link</mat-icon> Vincular Pet ao Tutor
                 </button>
 
                 <div class="h-px bg-slate-100 my-2 mx-4"></div>

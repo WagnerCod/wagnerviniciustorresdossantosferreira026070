@@ -1,11 +1,43 @@
-// Estilos customizados migrados para Tailwind CSS
-// Mantido apenas animação personalizada
 
-@keyframes fade-in {
+::ng-deep .no-border {
+
+  .mdc-notched-outline__leading,
+  .mdc-notched-outline__notch,
+  .mdc-notched-outline__trailing {
+    border-color: transparent !important;
+    border-width: 0 !important;
+  }
+
+  .mat-mdc-text-field-wrapper {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+
+  .mat-mdc-form-field-infix {
+    border-top: 0 !important;
+    padding-top: 12px !important;
+    padding-bottom: 8px !important;
+    min-height: 40px !important;
+  }
+
+  .mat-mdc-input-element,
+  .mat-mdc-select-value {
+    margin-top: -4px !important;
+  }
+
+  .mat-mdc-form-field-subscript-wrapper {
+    display: none !important;
+  }
+}
+
+/* Animação para os previews aparecerem suavemente */
+@keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(-5px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -13,5 +45,5 @@
 }
 
 .animate-fade-in {
-  animation: fade-in 0.3s ease-in;
+  animation: fadeIn 0.3s ease-out forwards;
 }

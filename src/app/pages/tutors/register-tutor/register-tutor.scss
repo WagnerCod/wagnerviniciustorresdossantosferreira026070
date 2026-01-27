@@ -1,0 +1,35 @@
+/* REMOVE BORDAS DO MATERIAL DESIGN (MDC) */
+::ng-deep .no-border {
+
+    /* 1. Remove as linhas visíveis */
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+        border-color: transparent !important;
+        border-width: 0 !important;
+    }
+
+    /* 2. Remove fundos e sombras */
+    .mat-mdc-text-field-wrapper {
+        background-color: transparent !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+    }
+
+    /* 3. Ajuste de posicionamento */
+    .mat-mdc-form-field-infix {
+        border-top: 0 !important;
+        padding-top: 12px !important;
+        padding-bottom: 8px !important;
+        min-height: 40px !important;
+    }
+
+    .mat-mdc-input-element {
+        margin-top: -4px !important;
+    }
+
+    /* 4. Esconde a linha inferior de erro padrão (usamos mat-error flutuante) */
+    .mat-mdc-form-field-subscript-wrapper {
+        display: none !important;
+    }
+}
