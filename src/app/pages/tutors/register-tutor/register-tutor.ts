@@ -82,9 +82,10 @@ export class RegisterTutor implements OnInit {
     }
 
     this.loading.set(true);
+    this.tutorForm.disable();
 
     // Remover máscaras do CPF e telefone antes de enviar
-    const formValue = this.tutorForm.value;
+    const formValue = this.tutorForm.getRawValue();
     const tutorData: Tutores = {
       ...formValue,
       cpf: this.utilService.removeMask(formValue.cpf),
@@ -104,6 +105,7 @@ export class RegisterTutor implements OnInit {
       },
       error: (error) => {
         this.loading.set(false);
+        this.tutorForm.enable();
         this.utilService.showError(
           error.error?.message || 'Erro ao cadastrar tutor. Tente novamente.'
         );
@@ -124,6 +126,7 @@ export class RegisterTutor implements OnInit {
       },
       error: (error) => {
         this.loading.set(false);
+        this.tutorForm.enable();
         this.utilService.showWarning(
           'Tutor cadastrado, mas houve erro ao enviar a foto: ' + error.message
         );
@@ -134,14 +137,14 @@ export class RegisterTutor implements OnInit {
 
   private redirectToList(): void {
     this.loading.set(false);
-    this.router.navigate(['/tutores']);
+    this.router.navigate(['/tutors']);
   }
 
   onCancel(): void {
-    this.router.navigate(['/tutores']);
+    this.router.navigate(['/tutors']);
   }
 
-  // Helpers para validação no template
+  
   getErrorMessage(fieldName: string): string {
     const field = this.tutorForm.get(fieldName);
     if (!field || !field.errors || !field.touched) return '';

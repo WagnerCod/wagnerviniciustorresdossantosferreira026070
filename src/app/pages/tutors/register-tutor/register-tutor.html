@@ -58,7 +58,7 @@
 
               <mat-form-field appearance="outline" class="!w-full !m-0 no-border">
                 <mat-label class="!text-slate-400">Nome Completo</mat-label>
-                <input matInput formControlName="nome" [disabled]="loading()" class="!text-slate-700 font-medium">
+                <input matInput formControlName="nome" class="!text-slate-700 font-medium">
                 @if (tutorForm.get('nome')?.invalid && tutorForm.get('nome')?.touched) {
                 <mat-error>{{ getErrorMessage('nome') }}</mat-error>
                 }
@@ -73,7 +73,7 @@
 
                 <mat-form-field appearance="outline" class="!w-full !m-0 no-border">
                   <mat-label class="!text-slate-400">CPF</mat-label>
-                  <input matInput formControlName="cpf" mask="000.000.000-00" [disabled]="loading()"
+                  <input matInput formControlName="cpf" mask="000.000.000-00"
                     class="!text-slate-700">
                   @if (tutorForm.get('cpf')?.invalid && tutorForm.get('cpf')?.touched) {
                   <mat-error>{{ getErrorMessage('cpf') }}</mat-error>
@@ -88,7 +88,7 @@
 
                 <mat-form-field appearance="outline" class="!w-full !m-0 no-border">
                   <mat-label class="!text-slate-400">Telefone</mat-label>
-                  <input matInput formControlName="telefone" mask="(00) 00000-0000" [disabled]="loading()"
+                  <input matInput formControlName="telefone" mask="(00) 00000-0000"
                     class="!text-slate-700">
                   @if (tutorForm.get('telefone')?.invalid && tutorForm.get('telefone')?.touched) {
                   <mat-error>{{ getErrorMessage('telefone') }}</mat-error>
@@ -104,7 +104,7 @@
 
               <mat-form-field appearance="outline" class="!w-full !m-0 no-border">
                 <mat-label class="!text-slate-400">E-mail</mat-label>
-                <input matInput type="email" formControlName="email" [disabled]="loading()" class="!text-slate-700">
+                <input matInput type="email" formControlName="email" class="!text-slate-700">
                 @if (tutorForm.get('email')?.invalid && tutorForm.get('email')?.touched) {
                 <mat-error>{{ getErrorMessage('email') }}</mat-error>
                 }
@@ -118,7 +118,7 @@
 
               <mat-form-field appearance="outline" class="!w-full !m-0 no-border">
                 <mat-label class="!text-slate-400">Endereço Completo</mat-label>
-                <textarea matInput formControlName="endereco" rows="3" [disabled]="loading()"
+                <textarea matInput formControlName="endereco" rows="3"
                   class="!text-slate-700 !resize-none"></textarea>
                 @if (tutorForm.get('endereco')?.invalid && tutorForm.get('endereco')?.touched) {
                 <mat-error>{{ getErrorMessage('endereco') }}</mat-error>
