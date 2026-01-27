@@ -145,11 +145,27 @@ export class TutorDetail implements OnInit, OnDestroy {
     if (pet?.foto?.url) {
       return pet.foto.url;
     }
-    return 'https://via.placeholder.com/150?text=Sem+Foto';
+    return '';
   }
 
   hasPetPhoto(pet: any): boolean {
     return !!pet?.foto?.url;
   }
 
+
+  deletePetTutor(tutorId: number, petId: number): void {
+    if (confirm(`Tem certeza que deseja desvincular este pet do tutor?`)) {
+      this.apiService.unlinkPetFromTutor(tutorId, petId)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe({
+          next: () => {
+            this.utilService.showSuccess('Pet desvinculado do tutor com sucesso!');
+            this.loadTutorDetails();
+          },
+          error: (error) => {
+            this.utilService.showError('Erro ao desvincular pet do tutor: ' + error.message);
+          }
+        });
+    }
+  }
 }
