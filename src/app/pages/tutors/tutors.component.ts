@@ -31,6 +31,7 @@ export class Tutors implements OnInit, OnDestroy {
   loadingMore = signal(false);
   hasReachedEnd = signal(false);
 
+  totalElements = 0;
   currentPage = 0;
   pageSize = 10;
   isLoadingPage = false;
@@ -83,7 +84,7 @@ export class Tutors implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           const newTutores = response.content;
-
+          this.totalElements = response.total;
           if (newTutores.length === 0 || newTutores.length < this.pageSize) {
             this.hasReachedEnd.set(true);
           }

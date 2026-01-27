@@ -1,181 +1,222 @@
-<div class="max-w-7xl mx-auto p-6">
-  <!-- Header -->
-  <div class="flex justify-between items-center mb-8 flex-wrap gap-4">
-    <div class="flex items-center gap-4">
-      <mat-icon class="text-purple-600 !text-4xl !w-9 !h-9">people</mat-icon>
-      <h1 class="text-3xl font-medium text-gray-800 m-0">Gerenciamento de Tutores</h1>
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 bg-slate-50 min-h-screen">
+
+  <div class="flex flex-col md:flex-row justify-between items-center mb-10 gap-6">
+
+    <div class="text-center md:text-left">
+      <h1 class="text-3xl font-bold text-slate-800 tracking-tight flex items-center gap-3">
+        <div class="bg-teal-100 p-2 rounded-xl text-teal-600">
+          <mat-icon class="!text-3xl !w-8 !h-8">people_alt</mat-icon>
+        </div>
+        Gerenciamento de Tutores
+      </h1>
+      <p class="text-slate-500 mt-1 ml-14">Administre os proprietários e seus vínculos</p>
     </div>
-    <button mat-raised-button color="primary" (click)="navRegisterTutor()" class="!flex !items-center !gap-2 !h-11 !px-6">
-      <mat-icon>person_add</mat-icon>
-      Cadastrar Tutor
+
+    <button mat-flat-button color="primary" (click)="navRegisterTutor()"
+      class="!bg-teal-600 hover:!bg-teal-700 !text-white !rounded-full !h-12 !px-8 shadow-lg hover:shadow-teal-500/30 transition-all">
+      <mat-icon class="mr-2">person_add</mat-icon>
+      Novo Tutor
     </button>
   </div>
 
-  <!-- Busca -->
-  <div class="mb-6">
-    <mat-form-field appearance="outline" class="!w-full !max-w-lg">
-      <mat-label>Buscar por nome</mat-label>
-      <input matInput [formControl]="searchControl" placeholder="Digite o nome do tutor">
-      <mat-icon matPrefix>search</mat-icon>
+  <div class="flex justify-center md:justify-start mb-8">
+    <div
+      class="w-full max-w-md bg-white rounded-full shadow-sm border border-slate-200 flex items-center px-4 py-2 focus-within:border-teal-500 focus-within:ring-2 focus-within:ring-teal-100 transition-all duration-300">
+      <mat-icon class="!text-slate-400 !mr-2">search</mat-icon>
+
+      <mat-form-field appearance="outline" class="!w-full !m-0 no-border">
+        <input matInput [formControl]="searchControl" placeholder="Buscar tutor por nome..." class="!text-slate-600">
+      </mat-form-field>
+
       @if (searchControl.value) {
-        <button mat-icon-button matSuffix (click)="clearSearch()" aria-label="Limpar busca">
-          <mat-icon>close</mat-icon>
-        </button>
+      <button mat-icon-button (click)="clearSearch()" class="!text-slate-400 hover:!text-red-500">
+        <mat-icon>close</mat-icon>
+      </button>
       }
-    </mat-form-field>
+    </div>
   </div>
 
-  <div>
-    <button (click)="navPetTutor()">pet X Tutor</button>
-  </div>
-
-  <!-- Lista de Tutores com Scroll Infinito -->
-  <div 
-    class="max-h-[calc(100vh-300px)] overflow-y-auto pr-2"
-    (scroll)="onScroll($event)"
+  <div class="max-h-[calc(100vh-300px)] overflow-y-auto pr-2 custom-scrollbar" (scroll)="onScroll($event)"
     #scrollContainer>
-    
+
     @if (tutores.length > 0) {
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-6">
-        @for (tutor of tutores; track tutor.id) {
-          <mat-card class="cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl flex flex-col h-full" (click)="viewTutorDetails(tutor.id)">
-            <div>
-              <button (click)="deleteTutors(tutor)">excluir</button>
+    <div class="flex justify-between items-center mb-4 px-2">
+      <span class="bg-teal-50 text-teal-800 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+        Total: {{ totalElements }} tutores
+      </span>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+      @for (tutor of tutores; track tutor.id) {
+
+      <mat-card
+        class="group !rounded-[2rem] !bg-white !border-none !shadow-sm hover:!shadow-xl hover:!-translate-y-2 transition-all duration-300 h-full flex flex-col relative overflow-hidden"
+        (click)="viewTutorDetails(tutor.id)">
+
+        <button mat-icon-button (click)="deleteTutors(tutor); $event.stopPropagation()"
+          class="!absolute !top-2 !right-2 !z-10 !text-slate-300 hover:!text-red-500 hover:!bg-red-50 transition-colors"
+          matTooltip="Excluir Tutor">
+          <mat-icon>delete_outline</mat-icon>
+        </button>
+
+        <div class="relative pt-8 pb-4 flex flex-col items-center bg-gradient-to-b from-slate-50 to-white">
+          <div class="relative">
+            @if (hasPhoto(tutor)) {
+            <img [src]="getImageUrl(tutor)" [alt]="tutor.nome"
+              class="w-28 h-28 rounded-full object-cover border-4 border-white shadow-md group-hover:scale-105 transition-transform duration-300">
+            } @else {
+            <div
+              class="w-28 h-28 rounded-full bg-teal-50 flex items-center justify-center border-4 border-white shadow-md text-teal-300 group-hover:bg-teal-100 transition-colors">
+              <mat-icon class="!text-5xl !w-12 !h-12">person</mat-icon>
             </div>
-            <div class="relative w-full h-48 overflow-hidden bg-gradient-to-br from-purple-100 to-purple-200 flex items-center justify-center">
-              @if (hasPhoto(tutor)) {
-                <img 
-                  [src]="getImageUrl(tutor)" 
-                  [alt]="tutor.nome"
-                  class="w-40 h-40 rounded-full object-cover border-4 border-white shadow-lg">
-              } @else {
-                <div class="w-40 h-40 rounded-full bg-white flex items-center justify-center border-4 border-purple-300 shadow-lg">
-                  <mat-icon class="!text-purple-400 !text-8xl !w-20 !h-20">person</mat-icon>
+            }
+          </div>
+
+          <h3
+            class="mt-4 text-xl font-bold text-slate-800 text-center px-4 leading-tight group-hover:text-teal-600 transition-colors">
+            {{ tutor.nome }}
+          </h3>
+          <span class="text-xs text-slate-400 font-medium bg-slate-100 px-2 py-0.5 rounded-full mt-1">
+            ID: #{{tutor.id}}
+          </span>
+        </div>
+
+        <mat-divider class="!border-slate-100"></mat-divider>
+
+        <mat-card-content class="!p-5 !flex-1 flex flex-col gap-4">
+
+          <div class="flex flex-col gap-3">
+            <div class="flex items-center gap-3 text-slate-600 group/item">
+              <div class="bg-blue-50 p-1.5 rounded-lg text-blue-500 group-hover/item:bg-blue-100 transition-colors">
+                <mat-icon class="!text-lg !w-5 !h-5 flex items-center justify-center">email</mat-icon>
+              </div>
+              <span class="text-sm truncate font-medium">{{ tutor.email }}</span>
+            </div>
+
+            <div class="flex items-center gap-3 text-slate-600 group/item">
+              <div
+                class="bg-purple-50 p-1.5 rounded-lg text-purple-500 group-hover/item:bg-purple-100 transition-colors">
+                <mat-icon class="!text-lg !w-5 !h-5 flex items-center justify-center">badge</mat-icon>
+              </div>
+              <span class="text-sm font-medium">{{ util.maskCPF(tutor.cpf) }}</span>
+            </div>
+
+            <div class="flex items-center gap-3 text-slate-600 group/item">
+              <div class="bg-green-50 p-1.5 rounded-lg text-green-500 group-hover/item:bg-green-100 transition-colors">
+                <mat-icon class="!text-lg !w-5 !h-5 flex items-center justify-center">phone</mat-icon>
+              </div>
+              <span class="text-sm font-medium">{{ formatPhone(tutor.telefone) }}</span>
+            </div>
+
+            <div class="flex items-start gap-3 text-slate-600 group/item">
+              <div
+                class="bg-orange-50 p-1.5 rounded-lg text-orange-500 group-hover/item:bg-orange-100 transition-colors mt-0.5">
+                <mat-icon class="!text-lg !w-5 !h-5 flex items-center justify-center">location_on</mat-icon>
+              </div>
+              <span class="text-sm leading-snug truncate">{{ tutor.endereco }}</span>
+            </div>
+          </div>
+
+          <div class="mt-2 pt-4 border-t border-dashed border-slate-200">
+            @if (tutor.pets && tutor.pets.length > 0) {
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+              Pets Vinculados ({{ tutor.pets.length }})
+            </p>
+
+            <div class="flex flex-wrap gap-2">
+              @for (pet of tutor.pets; track pet.id) {
+              <div
+                class="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-full pl-1 pr-2 py-1 transition-all hover:bg-white hover:shadow-sm">
+                @if (pet.foto && pet.foto.url) {
+                <img [src]="pet.foto.url" class="w-6 h-6 rounded-full object-cover">
+                } @else {
+                <div class="w-6 h-6 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center">
+                  <mat-icon class="!text-[12px] !w-3 !h-3 flex items-center justify-center">pets</mat-icon>
                 </div>
+                }
+
+                <span class="text-xs text-slate-700 font-semibold max-w-[80px] truncate" [title]="pet.nome">
+                  {{ pet.nome }}
+                </span>
+
+                <button (click)="deletePetTutor(tutor.id, pet.id); $event.stopPropagation()"
+                  class="w-4 h-4 rounded-full bg-slate-200 text-slate-500 hover:bg-red-500 hover:text-white flex items-center justify-center transition-colors ml-1"
+                  matTooltip="Desvincular pet">
+                  <mat-icon class="!text-[10px] !w-3 !h-3 flex items-center justify-center">close</mat-icon>
+                </button>
+              </div>
               }
             </div>
-            
-            <mat-card-content class="!flex-1 !p-4">
-              <h3 class="text-xl font-semibold mb-4 text-gray-800 overflow-hidden text-ellipsis whitespace-nowrap">
-                {{ tutor.nome }}
-              </h3>
-              
-              <div class="flex flex-col gap-3">
-                <div class="flex items-center gap-2 text-gray-600">
-                  <mat-icon class="!text-purple-600 !text-xl !w-5 !h-5">email</mat-icon>
-                  <span class="text-sm truncate">{{ tutor.email }}</span>
-                </div>
+            } @else {
+            <div
+              class="flex flex-col items-center justify-center py-2 text-slate-400 bg-slate-50 rounded-xl border border-dashed border-slate-200">
+              <mat-icon class="!text-lg mb-1 opacity-50">pets</mat-icon>
+              <span class="text-xs">Sem pets vinculados</span>
+            </div>
+            }
+          </div>
 
-                <div class="flex items-center gap-2 text-gray-600">
-                  <mat-icon class="!text-purple-600 !text-xl !w-5 !h-5">badge</mat-icon>
-                  <span class="text-sm truncate">{{ util.maskCPF(tutor.cpf) }}</span>
-                </div>
-                
-                <div class="flex items-center gap-2 text-gray-600">
-                  <mat-icon class="!text-purple-600 !text-xl !w-5 !h-5">phone</mat-icon>
-                  <span class="text-sm">{{ formatPhone(tutor.telefone) }}</span>
-                </div>
+        </mat-card-content>
 
-                <div class="flex items-center gap-2 text-gray-600">
-                  <mat-icon class="!text-purple-600 !text-xl !w-5 !h-5">location_on</mat-icon>
-                  <span class="text-sm truncate">{{ tutor.endereco }}</span>
-                </div>
-
-                <!-- Pets Vinculados -->
-                @if (tutor.pets && tutor.pets.length > 0) {
-                  <div class="mt-3 pt-3 border-t border-gray-200">
-                    <div class="flex items-center gap-2 mb-2">
-                      <mat-icon class="!text-purple-600 !text-xl !w-5 !h-5">pets</mat-icon>
-                      <span class="text-sm font-semibold text-gray-700">
-                        Pets ({{ tutor.pets.length }})
-                      </span>
-                    </div>
-                    <div class="flex flex-wrap gap-2">
-                      @for (pet of tutor.pets; track pet.id) {
-                        <div>
-                          <button (click)="deletePetTutor(tutor.id, pet.id)">Desvincular</button>
-                        </div>
-                        <div class="flex items-center gap-2 bg-purple-50 rounded-lg p-2 hover:bg-purple-100 transition-colors">
-                          @if (pet.foto && pet.foto.url) {
-                            <img 
-                              [src]="pet.foto.url" 
-                              [alt]="pet.nome"
-                              [title]="pet.nome + ' - ' + pet.raca"
-                              class="w-8 h-8 rounded-full object-cover border-2 border-purple-300">
-                          } @else {
-                            <div class="w-8 h-8 rounded-full bg-purple-200 flex items-center justify-center border-2 border-purple-300" [title]="pet.nome">
-                              <mat-icon class="!text-purple-600 !text-base !w-4 !h-4">pets</mat-icon>
-                            </div>
-                          }
-                          <span class="text-xs text-gray-700 font-medium">{{ pet.nome }}</span>
-                        </div>
-                      }
-                    </div>
-                  </div>
-                } @else {
-                  <div class="mt-3 pt-3 border-t border-gray-200">
-                    <div class="flex items-center gap-2 text-gray-400">
-                      <mat-icon class="!text-base !w-4 !h-4">pets</mat-icon>
-                      <span class="text-xs italic">Nenhum pet vinculado</span>
-                    </div>
-                  </div>
-                }
-              </div>
-            </mat-card-content>
-
-            <mat-card-actions class="!p-4 !border-t !border-gray-200">
-              <button mat-button color="primary" class="!w-full !flex !items-center !justify-center !gap-2" (click)="navUpdateTutor(tutor.id); $event.stopPropagation()">
-                <mat-icon>edit</mat-icon>
-                Editar
-              </button>
-            </mat-card-actions>
-          </mat-card>
-        }
-      </div>
-
-      <!-- Loading mais itens -->
-      @if (loadingMore()) {
-        <div class="flex justify-center py-6">
-          <mat-spinner diameter="40"></mat-spinner>
-        </div>
+        <mat-card-actions class="!p-4 !pt-0">
+          <button mat-stroked-button color="primary"
+            class="!w-full !rounded-xl !border-slate-200 !text-slate-600 hover:!bg-teal-50 hover:!border-teal-200 hover:!text-teal-700 transition-all"
+            (click)="navUpdateTutor(tutor.id); $event.stopPropagation()">
+            <mat-icon class="mr-2 icon-sm">edit</mat-icon>
+            Editar Dados
+          </button>
+        </mat-card-actions>
+      </mat-card>
       }
+    </div>
 
-      <!-- Mensagem de fim -->
-      @if (hasReachedEnd() && !loadingMore()) {
-        <div class="text-center py-6 text-gray-500">
-          <mat-icon class="!text-4xl !w-10 !h-10 mb-2">check_circle</mat-icon>
-          <p class="m-0">Todos os tutores foram carregados</p>
-        </div>
-      }
+    @if (loadingMore()) {
+    <div class="flex justify-center py-6">
+      <mat-spinner diameter="30" class="custom-spinner"></mat-spinner>
+    </div>
+    }
+
+    @if (hasReachedEnd() && !loadingMore()) {
+    <div class="flex items-center justify-center py-8 opacity-50">
+      <div class="h-px w-12 bg-slate-300"></div>
+      <p class="mx-3 text-xs text-slate-500 font-bold uppercase tracking-widest">Fim da lista</p>
+      <div class="h-px w-12 bg-slate-300"></div>
+    </div>
+    }
     }
   </div>
 
-  <!-- Loading inicial -->
   @if (loading() && tutores.length === 0) {
-    <div class="flex justify-center items-center py-20">
-      <mat-spinner></mat-spinner>
-    </div>
+  <div class="flex flex-col items-center justify-center py-20 space-y-4">
+    <mat-spinner diameter="40" color="primary"></mat-spinner>
+    <p class="text-slate-500 animate-pulse">Carregando tutores...</p>
+  </div>
   }
 
-  <!-- Empty State -->
   @if (!loading() && tutores.length === 0) {
-    <div class="flex flex-col items-center justify-center py-20 text-center">
-      <mat-icon class="!text-gray-400 !text-8xl !w-20 !h-20 mb-4">people_outline</mat-icon>
-      @if (searchControl.value) {
-        <h2 class="text-2xl font-medium text-gray-600 m-0 mb-2">Nenhum tutor encontrado</h2>
-        <p class="text-base text-gray-500 m-0 mb-6">Não encontramos tutores com o nome "{{ searchControl.value }}"</p>
-        <button mat-raised-button color="primary" (click)="clearSearch()" class="!flex !items-center !gap-2">
-          <mat-icon>refresh</mat-icon>
-          Ver todos os tutores
-        </button>
-      } @else {
-        <h2 class="text-2xl font-medium text-gray-600 m-0 mb-2">Nenhum tutor cadastrado</h2>
-        <p class="text-base text-gray-500 m-0 mb-6">Comece cadastrando seu primeiro tutor!</p>
-        <button mat-raised-button color="primary" (click)="navRegisterTutor()" class="!flex !items-center !gap-2">
-          <mat-icon>person_add</mat-icon>
-          Cadastrar Primeiro Tutor
-        </button>
-      }
+  <div class="flex flex-col items-center justify-center py-24 text-center">
+    <div class="bg-white p-6 rounded-full shadow-sm mb-6 relative">
+      <div class="absolute inset-0 bg-teal-50 rounded-full animate-ping opacity-75"></div>
+      <mat-icon class="!text-teal-300 !text-7xl !w-20 !h-20 relative">person_off</mat-icon>
     </div>
+
+    @if (searchControl.value) {
+    <h2 class="text-2xl font-bold text-slate-700 mb-2">Nenhum tutor encontrado</h2>
+    <p class="text-slate-500 mb-6">Não encontramos ninguém com o nome "<span class="text-teal-600 font-bold">{{
+        searchControl.value }}</span>"</p>
+    <button mat-stroked-button (click)="clearSearch()"
+      class="!rounded-full !px-6 !border-slate-300 !text-slate-600 hover:!bg-slate-50">
+      Limpar Filtros
+    </button>
+    } @else {
+    <h2 class="text-2xl font-bold text-slate-700 mb-2">Lista de Tutores Vazia</h2>
+    <p class="text-slate-500 mb-8 max-w-md">Cadastre os tutores para gerenciar seus vínculos com os pets.</p>
+    <button mat-flat-button color="primary" (click)="navRegisterTutor()"
+      class="!bg-teal-600 !text-white !rounded-full !px-8 !py-6 shadow-lg hover:!bg-teal-700 hover:-translate-y-1 transition-all">
+      <mat-icon class="mr-2">person_add</mat-icon>
+      Cadastrar Primeiro Tutor
+    </button>
+    }
+  </div>
   }
 </div>

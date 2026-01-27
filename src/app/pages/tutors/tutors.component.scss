@@ -1,0 +1,50 @@
+
+::ng-deep .no-border {
+
+    /* Remove a borda padrão */
+    .mdc-notched-outline__leading,
+    .mdc-notched-outline__notch,
+    .mdc-notched-outline__trailing {
+        border-color: transparent !important;
+        border-width: 0 !important;
+    }
+
+    /* Remove fundos e sombras */
+    .mat-mdc-text-field-wrapper {
+        background-color: transparent !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+    }
+
+    /* Ajuste de alinhamento */
+    .mat-mdc-form-field-infix {
+        border-top: 0 !important;
+        padding-top: 8px !important;
+        padding-bottom: 8px !important;
+        min-height: auto !important;
+    }
+
+    .mat-mdc-input-element {
+        margin-top: -2px !important;
+        /* Ajuste fino do cursor */
+    }
+
+    /* Remove espaço de erro inferior */
+    .mat-mdc-form-field-subscript-wrapper {
+        display: none !important;
+    }
+}
+
+/* Scrollbar personalizada para combinar */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 20px;
+}
