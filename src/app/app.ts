@@ -10,5 +10,5 @@ import { Footer } from "./components_utils/footer/footer";
   styleUrl: './app.scss'
 })
 export class App {
-  protected title = 'wagnerviniciustorresdossantosferreira026070';
+  public title = 'wagnerviniciustorresdossantosferreira026070';
 }
