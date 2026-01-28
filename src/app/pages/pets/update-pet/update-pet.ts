@@ -2,7 +2,7 @@ import { Component, inject, OnInit, OnDestroy, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { ApiService } from '../../../core/services/api.service';
+import { ApiService } from '../../../core/services/api-service';
 import { UtilService } from '../../../core/services/util.service';
 import { Pets, PetsResponse } from '../../../core/models/pets.model';
 import { SharedModule } from '../../../shared/shared.module';

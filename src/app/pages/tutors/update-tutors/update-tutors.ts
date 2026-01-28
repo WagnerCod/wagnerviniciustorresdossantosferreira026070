@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ApiService } from '../../../core/services/api.service';
+import { ApiService } from '../../../core/services/api-service';
 import { UtilService } from '../../../core/services/util.service';
 import { Tutores, TutoresResponse } from '../../../core/models/tutores.model';
 import { SharedModule } from '../../../shared/shared.module';
@@ -85,10 +85,10 @@ export class UpdateTutors implements OnInit {
 
   private populateForm(tutor: TutoresResponse): void {
     // Formatar CPF e telefone com máscaras
- 
-      const cpfFormatted = tutor.cpf ? this.utilService.formatCPF(tutor.cpf.toString()) : '';
-      const telefoneFormatted = tutor.telefone ? this.utilService.formatPhone(tutor.telefone) : '';
-    
+
+    const cpfFormatted = tutor.cpf ? this.utilService.formatCPF(tutor.cpf.toString()) : '';
+    const telefoneFormatted = tutor.telefone ? this.utilService.formatPhone(tutor.telefone) : '';
+
 
     this.tutorForm.patchValue({
       nome: tutor.nome,

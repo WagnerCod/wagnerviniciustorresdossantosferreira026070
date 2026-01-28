@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, OnDestroy, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { ApiService } from '../../../core/services/api.service';
+import { ApiService } from '../../../core/services/api-service';
 import { UtilService } from '../../../core/services/util.service';
 import { TutoresResponse } from '../../../core/models/tutores.model';
 import { SharedModule } from './../../../shared/shared.module';

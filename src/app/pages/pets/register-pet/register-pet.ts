@@ -8,7 +8,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router } from '@angular/router';
-import { ApiService } from '../../../core/services/api.service';
+import { ApiService } from '../../../core/services/api-service';
 import { UtilService } from '../../../core/services/util.service';
 import { Pets } from '../../../core/models/pets.model';
 import { SharedModule } from '../../../shared/shared.module';

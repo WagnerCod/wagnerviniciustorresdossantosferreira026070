@@ -2,7 +2,7 @@ import { Component, inject, OnInit, OnDestroy, signal, ElementRef, ViewChild } f
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil, forkJoin } from 'rxjs';
-import { ApiService } from '../../core/services/api.service';
+import { TutorsFacade } from '../../core/facades/tutors.facade';
 import { UtilService } from '../../core/services/util.service';
 import { TutoresResponse } from '../../core/models/tutores.model';
 import { SharedModule } from '../../shared/shared.module';
@@ -18,7 +18,7 @@ import { SharedModule } from '../../shared/shared.module';
   styleUrl: './tutors.component.scss',
 })
 export class Tutors implements OnInit, OnDestroy {
-  private apiService = inject(ApiService);
+  private tutorsFacade = inject(TutorsFacade);
   public util = inject(UtilService);
   private router = inject(Router);
   private destroy$ = new Subject<void>();
@@ -79,7 +79,7 @@ export class Tutors implements OnInit, OnDestroy {
 
     const searchTerm = this.searchControl.value?.trim() || '';
 
-    this.apiService.searchTutoresByName(searchTerm, this.currentPage, this.pageSize)
+    this.tutorsFacade.searchTutoresByName(searchTerm, this.currentPage, this.pageSize)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
@@ -92,7 +92,7 @@ export class Tutors implements OnInit, OnDestroy {
           // Buscar detalhes completos de cada tutor (incluindo pets)
           if (newTutores.length > 0) {
             const tutorDetailRequests = newTutores.map(tutor =>
-              this.apiService.getTutorById(tutor.id)
+              this.tutorsFacade.loadTutorById(tutor.id)
             );
 
             forkJoin(tutorDetailRequests)
@@ -178,13 +178,13 @@ export class Tutors implements OnInit, OnDestroy {
 
   deleteTutors(tutors: TutoresResponse): void {
     if (confirm(`Tem certeza que deseja excluir ${tutors.nome}?`)) {
-      this.apiService.deleteTutor(tutors.id)
+      this.tutorsFacade.deleteTutor(tutors.id)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: () => {
             this.util.showSuccess('Tutor excluído com sucesso!');
             if (tutors.foto && tutors.foto.id) {
-              this.apiService.deleteTutorPhoto(tutors.id, tutors.foto.id)
+              this.tutorsFacade.deletePhoto(tutors.id, tutors.foto.id)
                 .pipe(takeUntil(this.destroy$))
                 .subscribe({
                   next: () => {
