@@ -3,11 +3,13 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { ApiService } from '../../core/services/api.service';
+
 import { UtilService } from '../../core/services/util.service';
 import { TutoresResponse } from '../../core/models/tutores.model';
 import { PetsResponse } from '../../core/models/pets.model';
 import { SharedModule } from '../../shared/shared.module';
+import { PetsFacade } from '../../core/facades/pets.facade';
+import { TutorsFacade } from '../../core/facades/tutors.facade';
 
 @Component({
   selector: 'app-pet-tutor',
@@ -22,7 +24,8 @@ export class PetTutor implements OnInit {
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
-  private apiService = inject(ApiService);
+  private petsFacade = inject(PetsFacade);
+  private tutorsFacade = inject(TutorsFacade);
   private utilService = inject(UtilService);
 
   vinculacaoForm!: FormGroup;
@@ -116,7 +119,7 @@ export class PetTutor implements OnInit {
 
   private loadTutorById(id: number): void {
     this.loading.set(true);
-    this.apiService.getTutorById(id).subscribe({
+    this.tutorsFacade.loadTutorById(id).subscribe({
       next: (tutor) => {
         this.selectedTutor = tutor;
         this.vinculacaoForm.patchValue({ tutorId: tutor.id });
@@ -131,7 +134,7 @@ export class PetTutor implements OnInit {
 
   private loadPetById(id: number): void {
     this.loading.set(true);
-    this.apiService.getPetById(id).subscribe({
+    this.petsFacade.loadPetById(id).subscribe({
       next: (pet) => {
         this.selectedPet = pet;
         this.vinculacaoForm.patchValue({ petId: pet.id });
@@ -146,7 +149,7 @@ export class PetTutor implements OnInit {
 
   private loadTutoresList(): void {
     this.loading.set(true);
-    this.apiService.getTutores(0, 100).subscribe({
+    this.tutorsFacade.loadTutores(0, 100).subscribe({
       next: (response) => {
         this.tutoresList = response.content;
         this.loading.set(false);
@@ -160,7 +163,7 @@ export class PetTutor implements OnInit {
 
   private loadPetsList(): void {
     this.loading.set(true);
-    this.apiService.getPets(0, 100).subscribe({
+    this.petsFacade.loadPets(0, 100).subscribe({
       next: (response) => {
         this.petsList = response.content;
         this.loading.set(false);
@@ -202,7 +205,7 @@ export class PetTutor implements OnInit {
 
   private vincularPetTutor(tutorId: number, petId: number): void {
     this.loading.set(true);
-    this.apiService.linkPetToTutor(tutorId, petId).subscribe({
+    this.petsFacade.linkToTutor(tutorId, petId).subscribe({
       next: () => {
         this.utilService.showSuccess('Pet vinculado ao tutor com sucesso!');
         this.loading.set(false);

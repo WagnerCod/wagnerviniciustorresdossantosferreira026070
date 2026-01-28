@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, OnDestroy, CUSTOM_ELEMENTS_SCHEMA, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, forkJoin, takeUntil } from 'rxjs';
-import { ApiService } from '../../../core/services/api.service';
+import { PetsFacade } from '../../../core/facades/pets.facade';
 import { UtilService } from '../../../core/services/util.service';
 import { PetsResponse } from '../../../core/models/pets.model';
 import { TutoresResponse } from '../../../core/models/tutores.model';
@@ -21,7 +21,7 @@ import { LoaderPersonalized } from '../../../components_utils/loader-personalize
 export class PetDetailComponent implements OnInit, OnDestroy {
     private route = inject(ActivatedRoute);
     private router = inject(Router);
-    private apiService = inject(ApiService);
+    private petsFacade = inject(PetsFacade);
     utilService = inject(UtilService);
     private destroy$ = new Subject<void>();
 
@@ -58,7 +58,7 @@ export class PetDetailComponent implements OnInit, OnDestroy {
     loadPetDetails(): void {
         console.log('Carregando detalhes do pet ID:', this.petId);
         this.loading.set(true);
-        this.apiService.getPetById(this.petId)
+        this.petsFacade.loadPetById(this.petId)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (pet) => {
@@ -106,7 +106,7 @@ export class PetDetailComponent implements OnInit, OnDestroy {
 
     deletePet(): void {
         if (confirm(`Tem certeza que deseja excluir ${this.pet?.nome}?`)) {
-            this.apiService.deletePet(this.petId)
+            this.petsFacade.deletePet(this.petId)
                 .pipe(takeUntil(this.destroy$))
                 .subscribe({
                     next: () => {

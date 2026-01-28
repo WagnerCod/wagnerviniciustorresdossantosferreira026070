@@ -3,9 +3,10 @@ import { SharedModule } from '../../shared/shared.module';
 import { Router } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
-import { ApiService } from '../../core/services/api.service';
+
 import { UtilService } from '../../core/services/util.service';
 import { PetsResponse } from '../../core/models/pets.model';
+import { PetsFacade } from '../../core/facades/pets.facade';
 
 
 @Component({
@@ -19,7 +20,7 @@ import { PetsResponse } from '../../core/models/pets.model';
 })
 export class Pets implements OnInit, OnDestroy {
   private router = inject(Router);
-  private apiService = inject(ApiService);
+  private petsFacade = inject(PetsFacade);
   private utilService = inject(UtilService);
   private destroy$ = new Subject<void>();
 
@@ -81,7 +82,7 @@ export class Pets implements OnInit, OnDestroy {
       this.pageIndex = 0;
     }
 
-    this.apiService.getPets(this.pageIndex, this.pageSize)
+    this.petsFacade.loadPets(this.pageIndex, this.pageSize)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
@@ -112,7 +113,7 @@ export class Pets implements OnInit, OnDestroy {
 
     this.loading.set(true);
 
-    this.apiService.searchPetsByName(nome)
+    this.petsFacade.searchPetsByName(nome, 0, this.pageSize)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: any) => {
