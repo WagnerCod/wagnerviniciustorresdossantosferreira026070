@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, signal, ElementRef, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, signal, HostListener } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject, debounceTime, distinctUntilChanged, takeUntil, forkJoin } from 'rxjs';
@@ -22,8 +22,6 @@ export class Tutors implements OnInit, OnDestroy {
   public util = inject(UtilService);
   private router = inject(Router);
   private destroy$ = new Subject<void>();
-
-  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
 
   tutores: TutoresResponse[] = [];
   searchControl = new FormControl('');
@@ -130,12 +128,13 @@ export class Tutors implements OnInit, OnDestroy {
       });
   }
 
-  onScroll(event: Event): void {
-    const element = event.target as HTMLElement;
-    const threshold = 100; // pixels do final para começar a carregar
-    const atBottom = element.scrollHeight - element.scrollTop - element.clientHeight < threshold;
+  @HostListener('window:scroll', [])
+  onWindowScroll(): void {
+    const threshold = 200;
+    const position = window.pageYOffset + window.innerHeight;
+    const height = document.documentElement.scrollHeight;
 
-    if (atBottom && !this.isLoadingPage && !this.hasReachedEnd() && !this.loading()) {
+    if (position > height - threshold && !this.isLoadingPage && !this.hasReachedEnd() && !this.loading()) {
       this.loadTutores();
     }
   }

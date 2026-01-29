@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, OnDestroy, signal } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, signal, HostListener } from '@angular/core';
 import { SharedModule } from '../../shared/shared.module';
 import { Router } from '@angular/router';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -130,11 +130,11 @@ export class Pets implements OnInit, OnDestroy {
       });
   }
 
-  onScroll(event: any): void {
-    const element = event.target;
-    const threshold = 100;
-    const position = element.scrollTop + element.clientHeight;
-    const height = element.scrollHeight;
+  @HostListener('window:scroll', [])
+  onWindowScroll(): void {
+    const threshold = 200;
+    const position = window.pageYOffset + window.innerHeight;
+    const height = document.documentElement.scrollHeight;
 
     if (position > height - threshold && !this.loadingMore() && this.hasMorePages() && !this.isSearchMode) {
       this.pageIndex++;
