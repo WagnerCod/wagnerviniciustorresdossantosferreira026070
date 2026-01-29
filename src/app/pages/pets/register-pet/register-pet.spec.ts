@@ -3,8 +3,6 @@ import { RegisterPet } from './register-pet';
 import { provideRouter } from '@angular/router';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
-import { ApiService } from '../../../core/services/api.service';
-import { UtilService } from '../../../core/services/util.service';
 import { of } from 'rxjs';
 
 describe('RegisterPet', () => {

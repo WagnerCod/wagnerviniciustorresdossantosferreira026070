@@ -3,8 +3,7 @@ import { Tutors } from './tutors.component';
 import { provideRouter } from '@angular/router';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
-import { ApiService } from '../../core/services/api.service';
-import { UtilService } from '../../core/services/util.service';
+
 import { of } from 'rxjs';
 
 describe('Tutors', () => {
@@ -13,7 +12,6 @@ describe('Tutors', () => {
 
   beforeEach(async () => {
     const apiServiceSpy = jasmine.createSpyObj('ApiService', ['getAllTutores', 'searchTutores']);
-    const utilServiceSpy = jasmine.createSpyObj('UtilService', ['showAlert']);
 
     apiServiceSpy.getAllTutores.and.returnValue(of({ content: [], totalElements: 0 }));
 

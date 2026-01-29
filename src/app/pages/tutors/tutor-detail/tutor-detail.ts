@@ -27,14 +27,11 @@ export class TutorDetail implements OnInit, OnDestroy {
   tutorId!: number;
 
   ngOnInit(): void {
-    console.log('TutorDetail inicializado');
     this.route.params
       .pipe(takeUntil(this.destroy$))
       .subscribe(params => {
-        console.log('Parâmetros da rota:', params);
         this.tutorId = +params['id'];
         if (this.tutorId && !isNaN(this.tutorId)) {
-          console.log('ID do tutor válido:', this.tutorId);
           this.loadTutorDetails();
         } else {
           console.error('ID do tutor inválido:', params['id']);
@@ -50,21 +47,13 @@ export class TutorDetail implements OnInit, OnDestroy {
   }
 
   loadTutorDetails(): void {
-    console.log('Carregando detalhes do tutor ID:', this.tutorId);
     this.loading.set(true);
     this.apiService.getTutorById(this.tutorId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (tutor) => {
-          console.log('Tutor recebido:', tutor);
           this.tutor = tutor;
           this.loading.set(false);
-
-          if (tutor.pets && tutor.pets.length > 0) {
-            console.log('Total de pets:', tutor.pets.length);
-          } else {
-            console.log('Tutor sem pets cadastrados');
-          }
         },
         error: (error) => {
           console.error('Erro ao carregar tutor:', error);
