@@ -5,15 +5,41 @@ Aplicação web desenvolvida em **Angular 20** para gerenciamento completo de pe
 ##  Tecnologias
 
 - **Angular 20** com Standalone Components
+- **Node 22+**
 - **TypeScript 5.8**
 - **Tailwind CSS** + Angular Material
 - **RxJS** com BehaviorSubjects
 - **HttpClient** para requisições
 - **Karma + Jasmine** para testes
 
+
+
 ## Instalação e Execução
 
 ```bash
+
+
+git clone https://github.com/WagnerCod/wagnerviniciustorresdossantosferreira026070.git
+
+```
+
+#### 2. Instale o Angular CLI Globalmente (se ainda não tiver)
+
+```bash
+npm install -g @angular/cli
+```
+
+#### 3. Instale as Dependências do Projeto
+
+```bash
+npm install
+```
+
+#### 4. Execute o Servidor de Desenvolvimento
+
+```bash
+ng serve
+
 # Instalar dependências
 npm install
 
