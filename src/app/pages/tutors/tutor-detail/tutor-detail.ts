@@ -84,19 +84,22 @@ export class TutorDetail implements OnInit, OnDestroy {
   }
 
   deleteTutor(): void {
-    if (confirm(`Tem certeza que deseja excluir ${this.tutor?.nome}?`)) {
-      this.apiService.deleteTutor(this.tutorId)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: () => {
-            this.utilService.showSuccess('Tutor excluído com sucesso!');
-            this.goBack();
-          },
-          error: (error) => {
-            this.utilService.showError('Erro ao excluir tutor: ' + error.message);
-          }
-        });
-    }
+    this.utilService.confirmDelete(`o tutor ${this.tutor?.nome}`)
+      .subscribe(confirmed => {
+        if (confirmed) {
+          this.apiService.deleteTutor(this.tutorId)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+              next: () => {
+                this.utilService.showSuccess('Tutor excluído com sucesso!');
+                this.goBack();
+              },
+              error: (error) => {
+                this.utilService.showError('Erro ao excluir tutor: ' + error.message);
+              }
+            });
+        }
+      });
   }
 
   formatPhone(phone: string): string {
@@ -143,18 +146,26 @@ export class TutorDetail implements OnInit, OnDestroy {
 
 
   deletePetTutor(tutorId: number, petId: number): void {
-    if (confirm(`Tem certeza que deseja desvincular este pet do tutor?`)) {
-      this.apiService.unlinkPetFromTutor(tutorId, petId)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe({
-          next: () => {
-            this.utilService.showSuccess('Pet desvinculado do tutor com sucesso!');
-            this.loadTutorDetails();
-          },
-          error: (error) => {
-            this.utilService.showError('Erro ao desvincular pet do tutor: ' + error.message);
-          }
-        });
-    }
+    this.utilService.confirmDialog({
+      title: 'Desvincular Pet',
+      message: 'Tem certeza que deseja desvincular este pet do tutor? O vínculo será removido.',
+      confirmText: 'Sim, Desvincular',
+      cancelText: 'Cancelar',
+      type: 'warning'
+    }).subscribe(confirmed => {
+      if (confirmed) {
+        this.apiService.unlinkPetFromTutor(tutorId, petId)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe({
+            next: () => {
+              this.utilService.showSuccess('Pet desvinculado do tutor com sucesso!');
+              this.loadTutorDetails();
+            },
+            error: (error) => {
+              this.utilService.showError('Erro ao desvincular pet do tutor: ' + error.message);
+            }
+          });
+      }
+    });
   }
 }

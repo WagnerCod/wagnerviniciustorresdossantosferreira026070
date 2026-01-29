@@ -97,19 +97,22 @@ export class PetDetailComponent implements OnInit, OnDestroy {
     }
 
     deletePet(): void {
-        if (confirm(`Tem certeza que deseja excluir ${this.pet?.nome}?`)) {
-            this.petsFacade.deletePet(this.petId)
-                .pipe(takeUntil(this.destroy$))
-                .subscribe({
-                    next: () => {
-                        this.utilService.showSuccess('Pet excluído com sucesso!');
-                        this.goBack();
-                    },
-                    error: (error) => {
-                        this.utilService.showError('Erro ao excluir pet: ' + error.message);
-                    }
-                });
-        }
+        this.utilService.confirmDelete(`o pet ${this.pet?.nome}`)
+            .subscribe(confirmed => {
+                if (confirmed) {
+                    this.petsFacade.deletePet(this.petId)
+                        .pipe(takeUntil(this.destroy$))
+                        .subscribe({
+                            next: () => {
+                                this.utilService.showSuccess('Pet excluído com sucesso!');
+                                this.goBack();
+                            },
+                            error: (error) => {
+                                this.utilService.showError('Erro ao excluir pet: ' + error.message);
+                            }
+                        });
+                }
+            });
     }
 
     formatPhone(phone: string): string {
