@@ -39,7 +39,7 @@ export class UpdateTutors implements OnInit {
   private initForm(): void {
     this.tutorForm = this.fb.group({
       nome: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-      cpf: ['', [Validators.required, Validators.maxLength(11)]],
+      cpf: ['', [Validators.required, Validators.minLength(11)]],
       email: ['', [Validators.required, Validators.email]],
       telefone: ['', [Validators.required, Validators.minLength(10)]],
       endereco: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(200)]]
