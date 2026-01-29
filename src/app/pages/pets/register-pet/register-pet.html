@@ -15,12 +15,12 @@
           <div class="flex justify-center mb-4">
             <div class="relative group">
               <div
-                [class]="imagePreview 
+                [class]="imagePreview() 
                   ? 'w-40 h-40 rounded-full shadow-lg border-4 border-teal-100 overflow-hidden relative' 
                   : 'w-40 h-40 rounded-full border-2 border-dashed border-slate-300 bg-slate-50 flex flex-col items-center justify-center cursor-pointer hover:bg-teal-50 hover:border-teal-400 transition-all duration-300 group-hover:shadow-md'">
 
-                @if (imagePreview) {
-                <img [src]="imagePreview" alt="Preview" class="w-full h-full object-cover">
+                @if (imagePreview()) {
+                <img [src]="imagePreview()" alt="Preview" class="w-full h-full object-cover">
                 <div
                   class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
                   (click)="fileInput.click()">
@@ -35,6 +35,15 @@
                 </div>
                 }
               </div>
+
+              @if (imagePreview()) {
+              <button type="button" mat-mini-fab color="warn"
+                class="!absolute !top-0 !right-0 !w-8 !h-8 shadow-sm transform hover:scale-110 transition-transform"
+                (click)="removeImage()" aria-label="Remover foto">
+                <mat-icon class="!text-lg !w-4 !h-4 flex items-center justify-center">close</mat-icon>
+              </button>
+              }
+
               <input type="file" accept="image/*" #fileInput (change)="onFileSelected($event)" class="hidden">
             </div>
           </div>
@@ -82,15 +91,25 @@
           </div>
 
           <div class="flex flex-col-reverse sm:flex-row justify-end gap-3 mt-8 pt-6 border-t border-slate-100">
-            <button type="button" mat-button (click)="onCancel()" [disabled]="loading"
+            <button type="button" mat-button (click)="onCancel()" [disabled]="loading()"
               class="!rounded-xl !text-slate-500 hover:!bg-slate-100 !h-12 !px-8 w-full sm:w-auto">
               Cancelar
             </button>
-            <button type="submit" mat-flat-button color="primary" [disabled]="loading || petForm.invalid"
-              class="!bg-teal-600 hover:!bg-teal-700 !text-white !rounded-xl !h-12 !px-8 !text-base shadow-lg w-full sm:w-auto">
-              <span class="flex items-center gap-2">
-                <mat-icon>check_circle</mat-icon> Salvar Cadastro
-              </span>
+            <button type="submit" mat-flat-button color="primary" [disabled]="loading() || petForm.invalid"
+              [class]="(petForm.valid && !loading()) 
+                ? '!bg-teal-600 hover:!bg-teal-700 !text-white !rounded-xl !h-12 !px-8 !text-base shadow-lg hover:shadow-teal-500/30 transition-all w-full sm:w-auto'
+                : '!bg-slate-300 !text-slate-500 !rounded-xl !h-12 !px-8 !text-base !cursor-not-allowed transition-all w-full sm:w-auto'">
+              @if (loading()) {
+              <div class="flex items-center gap-2">
+                <mat-spinner diameter="20" color="accent"></mat-spinner>
+                <span>Cadastrando...</span>
+              </div>
+              } @else {
+              <div class="flex items-center gap-2">
+                <mat-icon>check_circle</mat-icon>
+                <span>Cadastrar Pet</span>
+              </div>
+              }
             </button>
           </div>
         </form>

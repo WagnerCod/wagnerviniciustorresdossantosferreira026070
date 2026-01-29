@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -30,9 +30,9 @@ export class RegisterPet implements OnInit {
   private router = inject(Router);
 
   petForm!: FormGroup;
-  loading = false;
+  loading = signal(false);
   selectedFile: File | null = null;
-  imagePreview: string | null = null;
+  imagePreview = signal<string | null>(null);
 
   ngOnInit(): void {
     this.initForm();
@@ -68,7 +68,7 @@ export class RegisterPet implements OnInit {
       // Gerar preview
       const reader = new FileReader();
       reader.onload = (e: ProgressEvent<FileReader>) => {
-        this.imagePreview = e.target?.result as string;
+        this.imagePreview.set(e.target?.result as string);
       };
       reader.readAsDataURL(file);
     }
@@ -76,7 +76,7 @@ export class RegisterPet implements OnInit {
 
   removeImage(): void {
     this.selectedFile = null;
-    this.imagePreview = null;
+    this.imagePreview.set(null);
   }
 
   onSubmit(): void {
@@ -86,7 +86,7 @@ export class RegisterPet implements OnInit {
       return;
     }
 
-    this.loading = true;
+    this.loading.set(true);
     this.petForm.disable();
     const petData: Pets = this.petForm.getRawValue();
 
@@ -102,7 +102,7 @@ export class RegisterPet implements OnInit {
         }
       },
       error: (error) => {
-        this.loading = false;
+        this.loading.set(false);
         this.petForm.enable();
         this.utilService.showError(
           error.message || 'Erro ao cadastrar pet. Tente novamente.'
@@ -123,7 +123,7 @@ export class RegisterPet implements OnInit {
         this.redirectToList();
       },
       error: (error) => {
-        this.loading = false;
+        this.loading.set(false);
         this.petForm.enable();
         this.utilService.showWarning(
           'Pet cadastrado, mas houve erro ao enviar a foto: ' + error.message
@@ -134,7 +134,7 @@ export class RegisterPet implements OnInit {
   }
 
   private redirectToList(): void {
-    this.loading = false;
+    this.loading.set(false);
     this.router.navigate(['/pets']);
   }
 
