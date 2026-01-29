@@ -27,7 +27,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         catchError(error => {
             // Se retornar 401, tenta renovar o token (mas apenas uma vez)
             if (error.status === 401 && !req.url.includes('/autenticacao/refresh') && authService.getRefreshToken()) {
-                console.log('Recebido 401, tentando renovar token...');
                 return authService.refreshToken().pipe(
                     switchMap(() => {
                         // Retentar a requisição com o novo token
@@ -37,7 +36,6 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
                             return throwError(() => new Error('Token não disponível'));
                         }
 
-                        console.log('Retentando requisição com novo token');
                         const clonedReq = req.clone({
                             setHeaders: {
                                 Authorization: `Bearer ${newToken}`

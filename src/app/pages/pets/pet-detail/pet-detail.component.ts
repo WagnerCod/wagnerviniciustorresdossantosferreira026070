@@ -33,17 +33,13 @@ export class PetDetailComponent implements OnInit, OnDestroy {
     petId!: number;
 
     ngOnInit(): void {
-        console.log('PetDetailComponent inicializado');
         this.route.params
             .pipe(takeUntil(this.destroy$))
             .subscribe(params => {
-                console.log('Parâmetros da rota:', params);
                 this.petId = +params['id'];
                 if (this.petId && !isNaN(this.petId)) {
-                    console.log('ID do pet válido:', this.petId);
                     this.loadPetDetails();
                 } else {
-                    console.error('ID do pet inválido:', params['id']);
                     this.utilService.showError('ID do pet inválido');
                     this.goBack();
                 }
@@ -56,13 +52,11 @@ export class PetDetailComponent implements OnInit, OnDestroy {
     }
 
     loadPetDetails(): void {
-        console.log('Carregando detalhes do pet ID:', this.petId);
         this.loading.set(true);
         this.petsFacade.loadPetById(this.petId)
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (pet) => {
-                    console.log('Pet recebido:', pet);
                     this.pet = pet;
                     this.loading.set(false);
 
@@ -70,8 +64,6 @@ export class PetDetailComponent implements OnInit, OnDestroy {
                     if (pet.tutores && pet.tutores.length > 0) {
                         this.tutores = pet.tutores;
                         this.tutor = pet.tutores[0] as any;
-                        console.log('Tutor principal:', this.tutor);
-                        console.log('Total de tutores:', this.tutores.length);
                     } else {
                         console.log('Pet sem tutores cadastrados');
                     }
@@ -89,7 +81,7 @@ export class PetDetailComponent implements OnInit, OnDestroy {
         if (this.pet?.foto?.url) {
             return this.pet.foto.url;
         }
-        return 'https://via.placeholder.com/400x300?text=Sem+Foto';
+        return '';
     }
 
     hasPhoto(): boolean {

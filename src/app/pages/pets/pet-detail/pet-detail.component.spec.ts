@@ -4,9 +4,10 @@ import { provideRouter } from '@angular/router';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { provideHttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
-import { ApiService } from '../../../core/services/api.service';
+
 import { UtilService } from '../../../core/services/util.service';
 import { of } from 'rxjs';
+import { ApiService } from '../../../core/services/api-service';
 
 describe('PetDetailComponent', () => {
     let component: PetDetailComponent;

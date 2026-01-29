@@ -35,7 +35,7 @@ export class StateService {
     public readonly petsLoading$: Observable<boolean> = this.petsLoadingSubject.asObservable();
     public readonly petsError$: Observable<string | null> = this.petsErrorSubject.asObservable();
 
-    // ==================== TUTORES (métodos usados) ====================
+    // ==================== TUTORES  ====================
 
     setTutores(tutores: TutoresResponse[]): void {
         this.tutoresSubject.next(tutores);
@@ -62,7 +62,7 @@ export class StateService {
         this.tutoresErrorSubject.next(null);
     }
 
-    // ==================== PETS (métodos usados) ====================
+    // ==================== PETS  ====================
 
     setPets(pets: PetsResponse[]): void {
         this.petsSubject.next(pets);
