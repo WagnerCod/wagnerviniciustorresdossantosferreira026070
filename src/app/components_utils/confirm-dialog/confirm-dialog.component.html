@@ -1,0 +1,37 @@
+<div class="p-6 max-w-md">
+  <!-- Ícone -->
+  <div class="flex justify-center mb-6">
+    <div [class]="'p-4 rounded-full ' + iconBgColor">
+      <mat-icon [class]="'!text-5xl !w-14 !h-14 ' + iconColor">{{ iconName }}</mat-icon>
+    </div>
+  </div>
+
+  <!-- Título -->
+  <h2 class="text-2xl font-bold text-slate-800 text-center mb-3">
+    {{ data.title }}
+  </h2>
+
+  <!-- Mensagem -->
+  <p class="text-slate-600 text-center mb-8 leading-relaxed">
+    {{ data.message }}
+  </p>
+
+  <!-- Botões -->
+  <div class="flex gap-3">
+    <button 
+      mat-stroked-button 
+      (click)="onCancel()" 
+      class="!flex-1 !rounded-xl !h-12 !border-slate-300 !text-slate-700 hover:!bg-slate-50">
+      {{ data.cancelText || 'Cancelar' }}
+    </button>
+
+    <button 
+      mat-flat-button 
+      (click)="onConfirm()" 
+      [class]="data.type === 'danger' 
+        ? '!flex-1 !rounded-xl !h-12 !bg-red-600 hover:!bg-red-700 !text-white shadow-lg hover:shadow-red-500/30'
+        : '!flex-1 !rounded-xl !h-12 !bg-teal-600 hover:!bg-teal-700 !text-white shadow-lg hover:shadow-teal-500/30'">
+      {{ data.confirmText || 'Confirmar' }}
+    </button>
+  </div>
+</div>

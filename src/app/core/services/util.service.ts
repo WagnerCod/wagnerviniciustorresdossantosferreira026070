@@ -1,11 +1,17 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
+import { ConfirmDialogComponent, ConfirmDialogData } from '../../components_utils/confirm-dialog/confirm-dialog.component';
 
 @Injectable({
     providedIn: 'root'
 })
 export class UtilService {
-    constructor(private snackBar: MatSnackBar) { }
+    private snackBar = inject(MatSnackBar);
+    private dialog = inject(MatDialog);
+
+    constructor() { }
 
     /**
      * notificação de sucesso
@@ -104,5 +110,39 @@ export class UtilService {
     removeMask(value: string): string {
         if (!value) return '';
         return value.replace(/\D/g, '');
+    }
+
+    /**
+     * Abre um dialog de confirmação customizado
+     * @returns Observable<boolean> - true se confirmado, false se cancelado
+     */
+    confirmDialog(data: Partial<ConfirmDialogData>): Observable<boolean> {
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+            width: '450px',
+            maxWidth: '90vw',
+            panelClass: 'custom-dialog-container',
+            data: {
+                title: data.title || 'Confirmar ação',
+                message: data.message || 'Tem certeza que deseja continuar?',
+                confirmText: data.confirmText || 'Confirmar',
+                cancelText: data.cancelText || 'Cancelar',
+                type: data.type || 'danger'
+            }
+        });
+
+        return dialogRef.afterClosed();
+    }
+
+    /**
+     * Atalho para dialog de confirmação de exclusão
+     */
+    confirmDelete(itemName: string = 'este registro'): Observable<boolean> {
+        return this.confirmDialog({
+            title: 'Confirmar Exclusão',
+            message: `Tem certeza que deseja excluir ${itemName}? Esta ação não pode ser desfeita.`,
+            confirmText: 'Sim, Excluir',
+            cancelText: 'Cancelar',
+            type: 'danger'
+        });
     }
 }
