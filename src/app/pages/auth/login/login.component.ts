@@ -23,6 +23,9 @@ export class LoginComponent implements OnInit {
     loading = signal(false);
     errorMessage = signal<string | null>(null);
 
+
+    imgPetTutor = 'imgs/pet-tutor.jpg';
+
     constructor() {
         this.loginForm = this.fb.group({
             username: ['admin', [Validators.required]],
