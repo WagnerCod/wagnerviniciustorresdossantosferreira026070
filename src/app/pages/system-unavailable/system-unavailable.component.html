@@ -1,0 +1,97 @@
+<div class="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-12">
+    <div class="max-w-md w-full">
+
+        <mat-card class="!rounded-[2.5rem] !shadow-2xl !bg-white overflow-hidden border border-slate-100 relative">
+
+            <div class="h-2 w-full bg-gradient-to-r from-red-400 to-orange-400"></div>
+
+            <mat-card-content class="!p-8 sm:!p-10 flex flex-col items-center text-center">
+
+                <div class="relative mb-6">
+                    <div class="absolute inset-0 bg-red-100 rounded-full animate-ping opacity-75"></div>
+
+                    <div
+                        class="relative w-24 h-24 bg-red-50 text-red-500 rounded-full flex items-center justify-center shadow-sm">
+                        <mat-icon class="!text-5xl !w-12 !h-12">cloud_off</mat-icon>
+                    </div>
+                </div>
+
+                <h1 class="text-2xl font-bold text-slate-800 mb-2">Sistema Indisponível</h1>
+                <p class="text-slate-500 mb-8 leading-relaxed">
+                    Ops! Não conseguimos conectar ao servidor no momento. Pode ser uma manutenção rápida.
+                </p>
+
+                @if (healthStatus) {
+                <div class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 mb-6 text-sm">
+
+                    <div class="flex justify-between items-center mb-2 pb-2 border-b border-slate-200">
+                        <span class="text-slate-500 font-medium">Status do Servidor</span>
+                        @if (healthStatus.isHealthy) {
+                        <span
+                            class="bg-green-100 text-green-700 px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
+                            <mat-icon class="!text-[14px] !w-3.5 !h-3.5">check_circle</mat-icon> Online
+                        </span>
+                        } @else {
+                        <span
+                            class="bg-red-100 text-red-700 px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
+                            <mat-icon class="!text-[14px] !w-3.5 !h-3.5">error</mat-icon> Offline
+                        </span>
+                        }
+                    </div>
+
+                    <div class="flex justify-between items-center text-slate-400 text-xs">
+                        <span>Última checagem:</span>
+                        <span class="font-mono">{{ healthStatus.lastCheck | date:'HH:mm:ss' }}</span>
+                    </div>
+
+                    @if (healthStatus.message) {
+                    <div class="mt-2 bg-red-50 text-red-600 p-2 rounded-lg text-xs text-left">
+                        <strong>Erro:</strong> {{ healthStatus.message }}
+                    </div>
+                    }
+                </div>
+                }
+
+                <div class="min-h-[60px] flex items-center justify-center w-full mb-6">
+                    @if (isChecking) {
+                    <div class="flex flex-col items-center gap-2 animate-fade-in">
+                        <mat-spinner diameter="30" color="warn"></mat-spinner>
+                        <span class="text-xs text-slate-400 font-medium uppercase tracking-wider">Reconectando...</span>
+                    </div>
+                    } @else if (countdown > 0) {
+                    <div class="flex flex-col items-center gap-1 animate-fade-in">
+                        <p class="text-slate-600 font-medium">Tentando novamente em</p>
+                        <span class="text-3xl font-bold text-teal-600">{{ countdown }}s</span>
+                    </div>
+                    } @else {
+                    <div class="flex items-center gap-2 text-slate-400 bg-slate-50 px-4 py-2 rounded-full">
+                        <mat-icon class="!text-lg">info</mat-icon>
+                        <span class="text-xs">Aguardando ação manual</span>
+                    </div>
+                    }
+                </div>
+
+                <div class="flex flex-col gap-3 w-full">
+                    <button mat-flat-button color="warn" (click)="checkAgain()" [disabled]="isChecking"
+                        class="!w-full !h-12 !rounded-xl !text-lg shadow-lg shadow-red-500/20 hover:!bg-red-600 transition-all">
+                        @if (!isChecking) { <mat-icon class="mr-2">refresh</mat-icon> }
+                        {{ isChecking ? 'Verificando...' : 'Tentar Novamente' }}
+                    </button>
+
+                    <button mat-stroked-button (click)="goToLogin()"
+                        class="!w-full !h-12 !rounded-xl !border-slate-200 !text-slate-500 hover:!bg-slate-50 hover:!text-slate-700">
+                        Voltar ao Login
+                    </button>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-slate-100 w-full text-left">
+                    <ul class="text-sm text-slate-500 space-y-1 list-disc pl-5">
+                        <li>Verifique sua conexão com a internet.</li>
+                        <li>Aguarde alguns minutos, pode ser temporário.</li>
+                    </ul>
+                </div>
+
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>

@@ -57,7 +57,7 @@ export const routes: Routes = [
         canActivate: [authGuard]
     },
     {
-        path:'tutor-details/:id',
+        path: 'tutor-details/:id',
         loadComponent: () => import('./pages/tutors/tutor-detail/tutor-detail').then(m => m.TutorDetail),
         canActivate: [authGuard]
     },
@@ -65,6 +65,10 @@ export const routes: Routes = [
         path: 'pet-tutor',
         loadComponent: () => import('./pages/pet-tutor/pet-tutor').then(m => m.PetTutor),
         canActivate: [authGuard]
+    },
+    {
+        path: 'system-unavailable',
+        loadComponent: () => import('./pages/system-unavailable/system-unavailable.component').then(m => m.SystemUnavailableComponent)
     },
     {
         path: '**',
