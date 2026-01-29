@@ -1,7 +1,6 @@
 ::ng-deep .no-border {
 
-    /* CORREÇÃO: Em vez de 'display: none', usamos transparente. 
-       Isso mantém o espaço do Label funcionando. */
+
     .mdc-notched-outline__leading,
     .mdc-notched-outline__notch,
     .mdc-notched-outline__trailing {
@@ -14,10 +13,9 @@
         background-color: transparent !important;
         box-shadow: none !important;
         padding: 0 !important;
-        /* Remove padding lateral extra */
     }
 
-    /* Ajuste fino para o texto e label ficarem alinhados na nossa "cápsula" */
+
     .mat-mdc-form-field-infix {
         border-top: 0 !important;
         padding-top: 12px !important;
@@ -27,15 +25,14 @@
         /* Altura mínima para não cortar o label */
     }
 
-    /* Garante que o input ocupe o espaço correto */
+ 
     .mat-mdc-input-element {
         margin-top: -4px !important;
-        /* Puxa o texto um pouco pra cima se necessário */
+       
     }
 
-    /* Remove a linha inferior de erro/dica para não quebrar o layout */
+    
     .mat-mdc-form-field-subscript-wrapper {
         display: none !important;
-        /* Se precisar ver o erro, use: position: absolute; bottom: -15px; */
     }
 }
