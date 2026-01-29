@@ -68,7 +68,7 @@ export class TutorDetail implements OnInit, OnDestroy {
     if (this.tutor?.foto?.url) {
       return this.tutor.foto.url;
     }
-    return 'https://via.placeholder.com/400x300?text=Sem+Foto';
+    return '';
   }
 
   hasPhoto(): boolean {

@@ -16,12 +16,12 @@
           <div class="flex justify-center mb-4">
             <div class="relative group">
               <div
-                [class]="imagePreview 
+                [class]="imagePreview() 
                   ? 'w-40 h-40 rounded-full shadow-lg border-4 border-teal-100 overflow-hidden relative' 
                   : 'w-40 h-40 rounded-full border-2 border-dashed border-slate-300 bg-slate-50 flex flex-col items-center justify-center cursor-pointer hover:bg-teal-50 hover:border-teal-400 transition-all duration-300 group-hover:shadow-md'">
 
-                @if (imagePreview) {
-                <img [src]="imagePreview" alt="Preview" class="w-full h-full object-cover">
+                @if (imagePreview()) {
+                <img [src]="imagePreview()" alt="Preview" class="w-full h-full object-cover">
                 <div
                   class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
                   (click)="fileInput.click()">
@@ -37,7 +37,7 @@
                 }
               </div>
 
-              @if (imagePreview) {
+              @if (imagePreview()) {
               <button type="button" mat-mini-fab color="warn"
                 class="!absolute !top-0 !right-0 !w-8 !h-8 shadow-sm transform hover:scale-110 transition-transform"
                 (click)="removeImage()" aria-label="Remover foto">
@@ -71,14 +71,13 @@
                 <mat-icon class="!text-purple-400">badge</mat-icon>
                 <div class="h-6 w-px bg-slate-200"></div>
 
-                <mat-form-field appearance="outline" class="!w-full !m-0 no-border">
-                  <mat-label class="!text-slate-400">CPF</mat-label>
-                  <input matInput formControlName="cpf" mask="000.000.000-00"
-                    class="!text-slate-700">
-                  @if (tutorForm.get('cpf')?.invalid && tutorForm.get('cpf')?.touched) {
-                  <mat-error>{{ getErrorMessage('cpf') }}</mat-error>
-                  }
-                </mat-form-field>
+              <mat-form-field appearance="outline" class="!w-full !m-0 no-border">
+                <mat-label class="!text-slate-400">CPF</mat-label>
+                <input matInput formControlName="cpf" mask="000.000.000-00" class="!text-slate-700" type="text" placeholder="000.000.000-00">
+                @if (tutorForm.get('cpf')?.invalid && tutorForm.get('cpf')?.touched) {
+                <mat-error>{{ getErrorMessage('cpf') }}</mat-error>
+                }
+              </mat-form-field>
               </div>
 
               <div
@@ -135,7 +134,9 @@
             </button>
 
             <button type="submit" mat-flat-button color="primary" [disabled]="loading() || tutorForm.invalid"
-              class="!bg-teal-600 hover:!bg-teal-700 !text-white !rounded-xl !h-12 !px-8 !text-base shadow-lg hover:shadow-teal-500/30 transition-all w-full sm:w-auto">
+              [class]="(tutorForm.valid && !loading()) 
+                ? '!bg-teal-600 hover:!bg-teal-700 !text-white !rounded-xl !h-12 !px-8 !text-base shadow-lg hover:shadow-teal-500/30 transition-all w-full sm:w-auto'
+                : '!bg-slate-300 !text-slate-500 !rounded-xl !h-12 !px-8 !text-base !cursor-not-allowed transition-all w-full sm:w-auto'">
               @if (loading()) {
               <div class="flex items-center gap-2">
                 <mat-spinner diameter="20" color="accent"></mat-spinner>

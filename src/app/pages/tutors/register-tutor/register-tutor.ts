@@ -25,7 +25,7 @@ export class RegisterTutor implements OnInit {
   tutorForm!: FormGroup;
   loading = signal(false);
   selectedFile: File | null = null;
-  imagePreview: string | null = null;
+  imagePreview = signal<string | null>(null);
 
   ngOnInit(): void {
     this.initForm();
@@ -63,7 +63,7 @@ export class RegisterTutor implements OnInit {
       // Gerar preview
       const reader = new FileReader();
       reader.onload = (e: ProgressEvent<FileReader>) => {
-        this.imagePreview = e.target?.result as string;
+        this.imagePreview.set(e.target?.result as string);
       };
       reader.readAsDataURL(file);
     }
@@ -71,7 +71,7 @@ export class RegisterTutor implements OnInit {
 
   removeImage(): void {
     this.selectedFile = null;
-    this.imagePreview = null;
+    this.imagePreview.set(null);
   }
 
   onSubmit(): void {

@@ -24,6 +24,7 @@
     "@angular/ssr": "^20.0.1",
     "@tailwindcss/postcss": "^4.1.18",
     "express": "^5.1.0",
+    "ngx-mask": "^21.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

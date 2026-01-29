@@ -32,6 +32,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatBadgeModule } from '@angular/material/badge';
 import { ReactiveFormsModule } from '@angular/forms';
+import { provideNgxMask, NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 
 const materialModules = [
     MatButtonModule,
@@ -69,13 +70,18 @@ const materialModules = [
     imports: [
         CommonModule,
         ReactiveFormsModule,
+        NgxMaskDirective,
+        NgxMaskPipe,
         ...materialModules
     ],
     exports: [
         CommonModule,
         ReactiveFormsModule,
+        NgxMaskDirective,
+        NgxMaskPipe,
         ...materialModules
     ],
+    providers: [provideNgxMask()],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SharedModule { }
