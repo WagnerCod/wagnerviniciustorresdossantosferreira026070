@@ -122,7 +122,7 @@ ng test
   - `Components` → Apenas apresentação
 - Arquivo: [state.service.ts](src/app/core/services/state.service.ts)
 
-## 🏗️ Arquitetura
+##  Arquitetura
 
 ### Padrões Implementados
 
@@ -193,7 +193,7 @@ src/app/
     └── shared.module.ts
 ```
 
-## 🎯 Priorização e Decisões
+## Priorização e Decisões
 
 ### Prioridade MÁXIMA 
 
