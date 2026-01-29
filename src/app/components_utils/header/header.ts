@@ -24,10 +24,12 @@ export class Header {
     return route !== '/login' && route !== '/login?sessionExpired=true&reason=refresh_expired';
   });
 
-  isAuthenticated = this.authService.isAuthenticated;
+
+  isAuthenticated;
   mobileMenuOpen = signal(false);
 
   constructor() {
+    this.isAuthenticated = this.authService.isAuthenticated;
     // Atualiza a rota atual quando houver navegação
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))

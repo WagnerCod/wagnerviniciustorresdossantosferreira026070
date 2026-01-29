@@ -1,24 +1,24 @@
 @if(isVisible()){
 
-<header class="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur-md transition-all duration-300">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-20">
+<header class="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur-md shadow-sm transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-14 sm:h-16 lg:h-20">
 
             <div class="flex items-center cursor-pointer group" (click)="navigateTo('/home')">
-                <div class="bg-teal-50 p-2 rounded-xl mr-3 group-hover:bg-teal-100 transition-colors">
+                <div class="bg-teal-50 p-1.5 sm:p-2 rounded-lg sm:rounded-xl mr-2 sm:mr-3 group-hover:bg-teal-100 transition-colors">
                     <mat-icon
-                        class="!text-teal-500 !text-3xl !w-8 !h-8 flex items-center justify-center">pets</mat-icon>
+                        class="!text-teal-500 !text-2xl sm:!text-3xl !w-6 sm:!w-8 !h-6 sm:!h-8 flex items-center justify-center">pets</mat-icon>
                 </div>
                 <div class="flex flex-col">
                     <span
-                        class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-teal-600 to-blue-600 hidden sm:inline tracking-tight">
+                        class="text-base sm:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-teal-600 to-blue-600 hidden sm:inline tracking-tight">
                         Pet Manager
                     </span>
                     <span
-                        class="text-xs text-slate-400 font-medium hidden sm:inline -mt-1 group-hover:text-teal-500 transition-colors">Sistema
+                        class="text-[10px] sm:text-xs text-slate-400 font-medium hidden sm:inline -mt-1 group-hover:text-teal-500 transition-colors">Sistema
                         de Gestão</span>
                 </div>
-                <span class="text-xl font-bold text-teal-600 sm:hidden">PM</span>
+                <span class="text-lg font-bold text-teal-600 sm:hidden">Pet Manager</span>
             </div>
 
             <!-- @if (isAuthenticated()) { -->
@@ -102,54 +102,62 @@
             } -->
 
             @if (isAuthenticated()) {
-            <button mat-icon-button (click)="toggleMobileMenu()" class="md:!hidden !text-slate-600 hover:!bg-slate-100">
-                <mat-icon>{{ mobileMenuOpen() ? 'close' : 'menu' }}</mat-icon>
+            <button mat-icon-button (click)="toggleMobileMenu()" class="md:!hidden !text-slate-600 hover:!bg-slate-100 !w-10 !h-10 !rounded-lg transition-all">
+                <mat-icon class="!text-2xl">{{ mobileMenuOpen() ? 'close' : 'menu' }}</mat-icon>
             </button>
             }
 
-            @if (!isAuthenticated()) {
-            <button mat-icon-button (click)="navigateTo('/login')" class="md:!hidden !text-teal-600">
-                <mat-icon>login</mat-icon>
-            </button>
-            }
         </div>
 
         @if (isAuthenticated() && mobileMenuOpen()) {
         <nav
-            class="md:hidden py-4 border-t border-slate-100 animate-fade-in bg-white/50 backdrop-blur-sm rounded-b-2xl">
-            <div class="flex flex-col space-y-1 px-2">
+            class="md:hidden pb-3 pt-2 border-t border-slate-100 animate-fade-in bg-gradient-to-b from-white to-slate-50/50 backdrop-blur-sm rounded-b-xl shadow-lg">
+            <div class="flex flex-col space-y-0.5 px-2">
 
-                <button mat-button (click)="navigateTo('/pets')"
-                    class="!justify-start !text-slate-600 hover:!bg-teal-50 hover:!text-teal-700 !rounded-xl !h-12 !pl-4">
-                    <mat-icon class="mr-3">pets</mat-icon> Meus Pets
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider px-3 pt-2 pb-1">Pets</p>
+                
+                <button mat-button (click)="navigateTo('/pets'); toggleMobileMenu()"
+                    class="!justify-start !text-slate-700 hover:!bg-teal-50 hover:!text-teal-700 !rounded-lg !h-11 !pl-3 transition-all">
+                    <mat-icon class="mr-3 !text-xl">pets</mat-icon> 
+                    <span class="font-medium">Ver Todos os Pets</span>
                 </button>
 
-                <button mat-button (click)="navigateTo('/pets/register')"
-                    class="!justify-start !text-slate-600 hover:!bg-teal-50 hover:!text-teal-700 !rounded-xl !h-12 !pl-4">
-                    <mat-icon class="mr-3">add_circle_outline</mat-icon> Cadastrar Pet
+                <button mat-button (click)="navigateTo('/pets/register'); toggleMobileMenu()"
+                    class="!justify-start !text-slate-700 hover:!bg-teal-50 hover:!text-teal-700 !rounded-lg !h-11 !pl-3 transition-all">
+                    <mat-icon class="mr-3 !text-xl">add_circle_outline</mat-icon> 
+                    <span class="font-medium">Cadastrar Pet</span>
                 </button>
 
-                <button mat-button (click)="navigateTo('/pet-tutor')"
-                    class="!justify-start !text-slate-600 hover:!bg-teal-50 hover:!text-teal-700 !rounded-xl !h-12 !pl-4">
-                    <mat-icon class="mr-3">link</mat-icon> Vincular Pet ao Tutor
+                <div class="h-px bg-slate-200 my-2 mx-3"></div>
+
+                <p class="text-xs font-bold text-slate-400 uppercase tracking-wider px-3 pt-1 pb-1">Tutores</p>
+
+                <button mat-button (click)="navigateTo('/tutors'); toggleMobileMenu()"
+                    class="!justify-start !text-slate-700 hover:!bg-blue-50 hover:!text-blue-700 !rounded-lg !h-11 !pl-3 transition-all">
+                    <mat-icon class="mr-3 !text-xl">people_outline</mat-icon> 
+                    <span class="font-medium">Ver Todos os Tutores</span>
+                </button>
+                
+                <button mat-button (click)="navigateTo('/tutors/register'); toggleMobileMenu()"
+                    class="!justify-start !text-slate-700 hover:!bg-blue-50 hover:!text-blue-700 !rounded-lg !h-11 !pl-3 transition-all">
+                    <mat-icon class="mr-3 !text-xl">person_add</mat-icon> 
+                    <span class="font-medium">Cadastrar Tutor</span>
                 </button>
 
-                <div class="h-px bg-slate-100 my-2 mx-4"></div>
+                <div class="h-px bg-slate-200 my-2 mx-3"></div>
 
-                <button mat-button (click)="navigateTo('/tutors')"
-                    class="!justify-start !text-slate-600 hover:!bg-blue-50 hover:!text-blue-700 !rounded-xl !h-12 !pl-4">
-                    <mat-icon class="mr-3">people_outline</mat-icon> Gerenciar Tutores
-                </button>
-                <button mat-button (click)="navigateTo('/tutors/resgiter-tutor')"
-                    class="!justify-start !text-slate-600 hover:!bg-blue-50 hover:!text-blue-700 !rounded-xl !h-12 !pl-4">
-                    <mat-icon class="mr-3">person_add</mat-icon> Novo Tutor
+                <button mat-button (click)="navigateTo('/pet-tutor'); toggleMobileMenu()"
+                    class="!justify-start !text-slate-700 hover:!bg-purple-50 hover:!text-purple-700 !rounded-lg !h-11 !pl-3 transition-all">
+                    <mat-icon class="mr-3 !text-xl">link</mat-icon> 
+                    <span class="font-medium">Vincular Pet ao Tutor</span>
                 </button>
 
-                <div class="h-px bg-slate-100 my-2 mx-4"></div>
+                <div class="h-px bg-slate-200 my-2 mx-3"></div>
 
-                <button mat-button (click)="logout()"
-                    class="!justify-start !text-red-500 hover:!bg-red-50 !rounded-xl !h-12 !pl-4">
-                    <mat-icon class="mr-3">logout</mat-icon> Sair
+                <button mat-button (click)="logout(); toggleMobileMenu()"
+                    class="!justify-start !text-red-600 hover:!bg-red-50 !rounded-lg !h-11 !pl-3 !font-semibold transition-all">
+                    <mat-icon class="mr-3 !text-xl">logout</mat-icon> 
+                    <span>Sair do Sistema</span>
                 </button>
             </div>
         </nav>
