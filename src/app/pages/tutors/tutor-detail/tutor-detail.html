@@ -33,7 +33,7 @@
       <mat-card class="!rounded-[2.5rem] !border-none !shadow-lg overflow-hidden bg-white">
         <div class="relative h-80 sm:h-96 w-full bg-slate-100">
           @if(hasPhoto()){
-          <img [src]="getImageUrl()" [alt]="tutor.nome"
+          <img [src]="getImageUrl()" [alt]="tutor.nome" (click)="viewImageTutor()"
             [class]="hasPhoto() ? 'w-full h-full object-cover' : 'w-full h-full object-cover opacity-30 mix-blend-multiply'">
           }
 
@@ -139,13 +139,12 @@
         </div>
 
         @for (pet of tutor.pets; track pet.id) {
-        <mat-card class="!rounded-2xl !border-none !shadow-lg bg-white relative overflow-hidden cursor-pointer hover:shadow-xl transition-shadow"
-          (click)="viewPetDetail(pet.id)">
+        <mat-card class="!rounded-2xl !border-none !shadow-lg bg-white relative overflow-hidden cursor-pointer hover:shadow-xl transition-shadow">
           
           <div class="relative h-48 w-full bg-slate-100">
             @if (hasPetPhoto(pet)) {
-            <img [src]="getPetImageUrl(pet)" [alt]="pet.nome"
-              class="w-full h-full object-cover">
+            <img [src]="getPetImageUrl(pet)" [alt]="pet.nome" (click)="viewImagePet(pet)"
+              class="w-full h-full object-cover" type="button">
             } @else {
             <div class="absolute inset-0 flex items-center justify-center bg-teal-50">
               <mat-icon class="!text-teal-200 !text-[60px] !w-[60px] !h-[60px]">pets</mat-icon>
@@ -189,7 +188,7 @@
             </div>
 
             <div class="mt-4 pt-3 border-t border-slate-100">
-              <button mat-stroked-button color="primary"
+              <button mat-stroked-button color="primary" (click)="viewPetDetail(pet.id)"
                 class="!rounded-xl !border-teal-200 !text-teal-700 hover:!bg-teal-50 w-full">
                 Ver Detalhes
                 <mat-icon class="ml-1 !text-base">arrow_forward</mat-icon>

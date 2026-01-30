@@ -31,7 +31,7 @@
       <mat-card class="!rounded-[2.5rem] !border-none !shadow-lg overflow-hidden bg-white">
         <div class="relative h-80 sm:h-96 w-full bg-slate-100">
           @if(hasPhoto()){
-          <img [src]="getImageUrl()" [alt]="pet.nome"
+          <img [src]="getImageUrl()" [alt]="pet.nome" (click)="viewImagePet()"
             [class]="hasPhoto() ? 'w-full h-full object-cover' : 'w-full h-full object-cover opacity-30 mix-blend-multiply'">
           }
 
@@ -100,7 +100,7 @@
         <div class="absolute -top-6 left-1/2 -translate-x-1/2">
           <div class="p-1.3 bg-white rounded-full shadow-lg">
             @if (tutor.foto && tutor.foto.url) {
-            <img [src]="tutor.foto.url" [alt]="tutor.nome"
+            <img [src]="tutor.foto.url" [alt]="tutor.nome" (click)="viewImageTutor(tutor)"
               class="w-24 h-24 rounded-full object-cover border-4 border-teal-50">
             } @else {
             <div

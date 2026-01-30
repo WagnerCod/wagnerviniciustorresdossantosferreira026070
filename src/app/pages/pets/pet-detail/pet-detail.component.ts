@@ -141,4 +141,28 @@ export class PetDetailComponent implements OnInit, OnDestroy {
             queryParams: { petId: petId }
         });
     }
+
+
+    viewImagePet(): void {
+        if (this.hasPhoto() && this.pet) {
+            this.utilService.openImageViewer(
+                this.getImageUrl(),
+                this.pet.nome,
+                'Pet'
+            );
+        } else {
+            this.utilService.showWarning('Não há foto disponível para visualizar');
+        }
+    }
+
+    viewImageTutor(tutor: TutoresResponse): void {
+        if (tutor.foto?.url && this.pet?.tutores) {
+            this.utilService.openImageViewer(
+                tutor.foto.url,
+                tutor.nome,
+                'Tutor');
+        } else {
+            this.utilService.showWarning('Não há foto disponível para visualizar');
+        }
+    }
 }

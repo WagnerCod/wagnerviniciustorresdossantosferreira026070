@@ -6,6 +6,7 @@ import { UtilService } from '../../../core/services/util.service';
 import { TutoresResponse } from '../../../core/models/tutores.model';
 import { SharedModule } from './../../../shared/shared.module';
 import { LoaderPersonalized } from '../../../components_utils/loader-personalized/loader-personalized';
+import { Pets } from '../../../core/models/pets.model';
 
 
 @Component({
@@ -167,5 +168,29 @@ export class TutorDetail implements OnInit, OnDestroy {
           });
       }
     });
+  }
+
+  viewImageTutor(): void {
+    if (this.hasPhoto() && this.tutor) {
+      this.utilService.openImageViewer(
+        this.getImageUrl(),
+        this.tutor.nome,
+        'Tutor'
+      );
+    } else {
+      this.utilService.showWarning('Não há foto disponível para visualizar');
+    }
+  }
+
+  viewImagePet(pet: Pets): void {
+    if (this.hasPetPhoto(pet) && this.tutor?.pets) {
+      this.utilService.openImageViewer(
+        this.getPetImageUrl(pet),
+        pet.nome,
+        'Pet'
+      );
+    } else {
+      this.utilService.showWarning('Não há foto disponível para visualizar');
+    }
   }
 }
