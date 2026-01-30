@@ -3,6 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { ConfirmDialogComponent, ConfirmDialogData } from '../../components_utils/confirm-dialog/confirm-dialog.component';
+import { ImageViewerDialogComponent, ImageViewerData } from '../../components_utils/image-viewer-dialog/image-viewer-dialog.component';
 
 @Injectable({
     providedIn: 'root'
@@ -143,6 +144,24 @@ export class UtilService {
             confirmText: 'Sim, Excluir',
             cancelText: 'Cancelar',
             type: 'danger'
+        });
+    }
+
+    /**
+     * Abre um modal para visualizar imagem em tamanho maior
+     * Pode ser usado para fotos de tutores ou pets
+     */
+    openImageViewer(imageUrl: string, title?: string, subtitle?: string): void {
+        this.dialog.open(ImageViewerDialogComponent, {
+            width: '90vw',
+            maxWidth: '1200px',
+            maxHeight: '90vh',
+            panelClass: 'image-viewer-dialog-container',
+            data: {
+                imageUrl,
+                title,
+                subtitle
+            } as ImageViewerData
         });
     }
 }

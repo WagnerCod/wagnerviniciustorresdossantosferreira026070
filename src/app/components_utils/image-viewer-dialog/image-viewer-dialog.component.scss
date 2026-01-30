@@ -1,0 +1,13 @@
+// Estilos usando Tailwind CSS
+// Mantém apenas customizações específicas se necessário
+
+// Responsividade adicional para mobile (se necessário)
+@media (max-width: 600px) {
+    .max-h-\[70vh\] {
+        max-height: 60vh;
+    }
+    
+    .min-h-\[300px\] {
+        min-height: 200px;
+    }
+}
